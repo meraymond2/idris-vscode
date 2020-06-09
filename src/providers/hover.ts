@@ -1,0 +1,28 @@
+import * as vscode from "vscode"
+import { IdrisClient } from "idris-ide-client"
+export const selector = { language: "idris" }
+
+export class Provider implements vscode.HoverProvider {
+  private client: IdrisClient
+
+  constructor(client: IdrisClient) {
+    this.client = client
+  }
+
+  provideHover(
+    document: vscode.TextDocument,
+    position: vscode.Position,
+    _token: vscode.CancellationToken
+  ): vscode.ProviderResult<vscode.Hover> {
+    return new Promise(async (res) => {
+      const range = document.getWordRangeAtPosition(position)
+      const name = document.getText(range)
+      const reply = await this.client.typeOf(name)
+      if ("ok" in reply) {
+        res({ contents: [{ value: reply.ok.type, language: "idris" }] })
+      } else {
+        res(null)
+      }
+    })
+  }
+}

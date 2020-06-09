@@ -1,0 +1,134 @@
+{
+  "name": "idris-vscode",
+  "displayName": "Idris Language",
+  "description": "Idris language support.",
+  "version": "0.0.1",
+  "engines": {
+    "vscode": "^1.44.0"
+  },
+  "categories": ["Programming Languages"],
+  "activationEvents": [
+    "onLanguage:idris"
+  ],
+  "main": "./out/extension.js",
+  "contributes": {
+    "commands": [
+      {
+        "command": "idris.addClause",
+        "title": "Idris: Add Clause"
+      },
+      {
+        "command": "idris.addMissing",
+        "title": "Idris: Add Missing"
+      },
+      {
+        "command": "idris.apropos",
+        "title": "Idris: Apropos"
+      },
+      {
+        "command": "idris.aproposSelection",
+        "title": "Idris: Apropos At Cursor"
+      },
+      {
+        "command": "idris.browseNamespace",
+        "title": "Idris: Browse Namespace"
+      },
+      {
+        "command": "idris.caseSplit",
+        "title": "Idris: Case Split"
+      },
+      {
+        "command": "idris.docsFor",
+        "title": "Idris: Documentation For"
+      },
+      {
+        "command": "idris.docsForSelection",
+        "title": "Idris: Documentation At Cursor"
+      },
+      {
+        "command": "idris.interpretSelection",
+        "title": "Idris: Interpret Selection"
+      },
+      {
+        "command": "idris.metavariables",
+        "title": "Idris: List Metavariables"
+      },
+      {
+        "command": "idris.printDefinition",
+        "title": "Idris: Print Definition"
+      },
+      {
+        "command": "idris.printDefinitionSelection",
+        "title": "Idris: Print Definition At Cursor"
+      },
+      {
+        "command": "idris.makeCase",
+        "title": "Idris: Make Case"
+      },
+      {
+        "command": "idris.makeLemma",
+        "title": "Idris: Make Lemma"
+      },
+      {
+        "command": "idris.makeWith",
+        "title": "Idris: Make With"
+      },
+      {
+        "command": "idris.proofSearch",
+        "title": "Idris: Proof Search"
+      },
+      {
+        "command": "idris.version",
+        "title": "Idris: Version"
+      }
+    ],
+    "configuration": {
+      "title": "Idris",
+      "properties": {
+        "idris.idrisPath": {
+          "type": "string",
+          "default": "idris",
+          "description": "Command to start Idris process."
+        }
+      }
+    },
+    "languages": [
+      {
+        "id": "idris",
+        "aliases": [
+          "Idris",
+          "idris"
+        ],
+        "configuration": "./language-configuration.json",
+        "extensions": [
+          ".idr"
+        ]
+      }
+    ],
+    "grammars": [
+      {
+        "language": "idris",
+        "scopeName": "source.idris",
+        "path": "./syntaxes/idris.tmLanguage.json"
+      }
+    ]
+  },
+  "scripts": {
+    "vscode:prepublish": "npm run compile",
+    "compile": "tsc -p ./",
+    "watch": "tsc -watch -p ./",
+    "lint": "tsc --noEmit && prettier --check --write 'src/**/*.ts' && eslint src --ext .ts --fix"
+  },
+  "dependencies": {
+    "idris-ide-client": "0.1.1"
+  },
+  "devDependencies": {
+    "@types/vscode": "^1.45.1",
+    "@types/node": "^13.11.0",
+    "eslint": "^6.8.0",
+    "@typescript-eslint/parser": "^2.26.0",
+    "@typescript-eslint/eslint-plugin": "^2.26.0",
+    "prettier": "^2.0.4",
+    "typescript": "^3.8.3"
+  }
+}
