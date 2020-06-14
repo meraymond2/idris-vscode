@@ -107,7 +107,7 @@ export const activate = (context: vscode.ExtensionContext) => {
 
   context.subscriptions.push(
     vscode.commands.registerCommand(
-      "aproposSelection",
+      "idris.aproposSelection",
       aproposSelection(client)
     )
   )
@@ -129,14 +129,14 @@ export const activate = (context: vscode.ExtensionContext) => {
 
   context.subscriptions.push(
     vscode.commands.registerCommand(
-      "docsForSelection",
+      "idris.docsForSelection",
       docsForSelection(client)
     )
   )
 
   context.subscriptions.push(
     vscode.commands.registerCommand(
-      "interpretSelection",
+      "idris.interpretSelection",
       interpretSelection(client)
     )
   )
@@ -157,7 +157,7 @@ export const activate = (context: vscode.ExtensionContext) => {
 
   context.subscriptions.push(
     vscode.commands.registerCommand(
-      "printDefinitionSelection",
+      "idris.printDefinitionSelection",
       printDefinitionSelection(client)
     )
   )
