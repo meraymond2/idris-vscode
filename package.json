@@ -1,12 +1,19 @@
 {
   "name": "idris-vscode",
+  "publisher": "meraymond",
   "displayName": "Idris Language",
   "description": "Idris language support.",
   "version": "0.0.1",
-  "engines": {
-    "vscode": "^1.44.0"
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/meraymond2/idris-vscode"
   },
-  "categories": ["Programming Languages"],
+  "engines": {
+    "vscode": "^1.44.1"
+  },
+  "categories": [
+    "Programming Languages"
+  ],
   "activationEvents": [
     "onLanguage:idris"
   ],
@@ -123,12 +130,13 @@
     "idris-ide-client": "0.1.1"
   },
   "devDependencies": {
-    "@types/vscode": "^1.45.1",
     "@types/node": "^13.11.0",
-    "eslint": "^6.8.0",
+    "@types/vscode": "^1.44.1",
     "@typescript-eslint/parser": "^2.26.0",
     "@typescript-eslint/eslint-plugin": "^2.26.0",
+    "eslint": "^6.8.0",
     "prettier": "^2.0.4",
-    "typescript": "^3.8.3"
+    "typescript": "^3.8.3",
+    "vsce": "1.76.0"
   }
 }
