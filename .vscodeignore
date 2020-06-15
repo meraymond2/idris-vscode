@@ -1,11 +1,8 @@
-# Ignore everything
-*
-*/**
-
-!.vscode
-!out
-!syntaxes
-!language-configuration.json
-!package-lock.json
-!package.json
-!README.md
+.vscode-test/
+src/
+.eslintrc.json
+.gitignore
+.prettierrc
+*.vsix
+shell.nix
+tsconfig.json
