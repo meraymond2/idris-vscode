@@ -27,8 +27,9 @@ import { handleWarning } from "./providers/diagnostics"
 import * as hover from "./providers/hover"
 import * as messageHighlighting from "./providers/message-highlighting"
 import * as virtualDocs from "./providers/virtual-docs"
+import { ChildProcess, spawn } from "child_process"
 
-let client: IdrisClient
+let idrisProc: ChildProcess
 
 const replyCallback = (reply: Reply): void => {
   switch (reply.type) {
@@ -42,9 +43,18 @@ export const activate = (context: vscode.ExtensionContext) => {
   /* Initialisation */
   const config = vscode.workspace.getConfiguration("idris")
 
-  client = new IdrisClient({
+  idrisProc = spawn(config.idrisPath, ["--ide-mode"])
+
+  idrisProc.on("error", (_ => {
+    vscode.window.showErrorMessage("Could not start Idris process with: " + config.idrisPath)
+  }))
+
+  if (!(idrisProc.stdin && idrisProc.stdout)) {
+    throw "Failed to start Idris process." // unreachable
+  }
+
+  const client = new IdrisClient(idrisProc.stdin, idrisProc.stdout, {
     debug: false,
-    idrisPath: config.idrisPath,
     replyCallback,
   })
 
@@ -184,5 +194,5 @@ export const activate = (context: vscode.ExtensionContext) => {
 }
 
 export const deactivate = () => {
-  client.close()
+  idrisProc.kill()
 }

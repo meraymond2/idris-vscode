@@ -1,6 +1,5 @@
 import * as vscode from "vscode"
-import { IdrisClient } from "idris-ide-client"
-import { Decor } from "idris-ide-client/build/src/s-exps"
+import { IdrisClient, Decor } from "idris-ide-client"
 
 const decorToKind = (decor: Decor): vscode.CompletionItemKind => {
   switch (decor) {
@@ -38,7 +37,7 @@ export class Provider implements vscode.CompletionItemProvider {
     const name = document.getText(range)
     return new Promise(async (res) => {
       const reply = await this.client.replCompletions(name)
-      const completions = reply.ok.map(
+      const completions = reply.completions.map(
         (completion) =>
           new vscode.CompletionItem(
             completion,
@@ -55,12 +54,12 @@ export class Provider implements vscode.CompletionItemProvider {
   ): vscode.ProviderResult<vscode.CompletionItem> {
     return new Promise(async (resolve) => {
       const reply = await this.client.docsFor(item.label, ":overview")
-      if ("ok" in reply) {
-        item.documentation = reply.ok.docs
+      if (reply.ok) {
+        item.documentation = reply.docs
 
         // The first line of the docs is the identifier itself, so the first
         // item of metadata is the type.
-        const decor = reply.ok.metadata[0]?.metadata?.decor || ":function"
+        const decor = reply.metadata[0]?.metadata?.decor || ":function"
         item.kind = decorToKind(decor)
       }
       resolve(item)

@@ -1,5 +1,5 @@
 import { VirtualDocInfo } from "./providers/virtual-docs"
-import { MessageMetadata } from "idris-ide-client/build/src/reply"
+import { MessageMetadata, Metavariable } from "idris-ide-client"
 
 interface Decl {
   name: string
@@ -63,19 +63,6 @@ export const stitchBrowseNamespace = (
   }
 }
 
-interface MetaVar {
-  metavariable: {
-    name: string
-    type: string
-    metadata: MessageMetadata[]
-  }
-  scope: {
-    name: string
-    type: string
-    metadata: MessageMetadata[]
-  }[]
-}
-
 /**
  * The metavariables reply has a list of metavars, each with a list of other
  * vars that are in its scope. The metavar and each of the other vars have their
@@ -85,7 +72,9 @@ interface MetaVar {
  *
  * TODO: add the scope vars to the output.
  */
-export const stitchMetavariables = (metavars: MetaVar[]): VirtualDocInfo => {
+export const stitchMetavariables = (
+  metavars: Metavariable[]
+): VirtualDocInfo => {
   const initial: {
     offset: number
     docText: string
@@ -93,8 +82,8 @@ export const stitchMetavariables = (metavars: MetaVar[]): VirtualDocInfo => {
   } = { offset: 0, docText: "", metadata: [] }
   const spacer = "\n\n"
 
-  const doc = metavars.reduce((acc, { metavariable, scope }) => {
-    const _unused = scope
+  const doc = metavars.reduce((acc, { metavariable, premises }) => {
+    const _todo = premises
     const nameText = metavariable.name + "\n"
     const typeText = metavariable.type + spacer
     const docText = acc.docText + nameText + typeText
