@@ -37,6 +37,11 @@ Support for [Idris](https://www.idris-lang.org/), the dependently-typed, functio
 
 You’ll need Idris installed. If it’s not on your $PATH, you can specify the path to the executable in the config.
 
+## Idris 2
+Currently the extension will default to v1. If you want it to use Idris 2, you can simply change the Idris path in your config.
+
+At the moment, the majority of the IDE commands haven’t been implemented in Idris 2. Most will simply return an empty reply. It should provide limited functionality though.
+
 ## Commands
 
 #### Add Clause
@@ -153,7 +158,6 @@ Under active development. Should be mostly working, but there are still features
 If you run into any problems, please raise an issue, or raise a PR if you want to.
 
 ## To Do
-- test with Idris 2, and implement any new language features
 - test on Windows & OSX
 - better syntax highlighting
 - implement Show References
