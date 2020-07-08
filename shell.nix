@@ -6,5 +6,6 @@ mkShell {
   buildInputs = [
       idris
       nodejs
+      idris2
   ];
 }
