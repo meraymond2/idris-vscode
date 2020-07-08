@@ -44,8 +44,14 @@ export const activate = (context: vscode.ExtensionContext) => {
   const config = vscode.workspace.getConfiguration("idris")
 
   idrisProc = spawn(config.idrisPath, ["--ide-mode"])
-  if (!(idrisProc.stdin && idrisProc.stdout))
-    throw "Failed to start Idris process." // TODO handle this better
+
+  idrisProc.on("error", (_ => {
+    vscode.window.showErrorMessage("Could not start Idris process with: " + config.idrisPath)
+  }))
+
+  if (!(idrisProc.stdin && idrisProc.stdout)) {
+    throw "Failed to start Idris process." // unreachable
+  }
 
   const client = new IdrisClient(idrisProc.stdin, idrisProc.stdout, {
     debug: false,
