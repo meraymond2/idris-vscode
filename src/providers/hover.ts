@@ -18,8 +18,8 @@ export class Provider implements vscode.HoverProvider {
       const range = document.getWordRangeAtPosition(position)
       const name = document.getText(range)
       const reply = await this.client.typeOf(name)
-      if ("ok" in reply) {
-        res({ contents: [{ value: reply.ok.type, language: "idris" }] })
+      if (reply.ok) {
+        res({ contents: [{ value: reply.typeOf, language: "idris" }] })
       } else {
         res(null)
       }

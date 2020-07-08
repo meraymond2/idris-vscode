@@ -1,5 +1,5 @@
 import * as vscode from "vscode"
-import { MessageMetadata } from "idris-ide-client/build/src/reply"
+import { MessageMetadata } from "idris-ide-client"
 import { virtualDocState } from "../global-state"
 
 export type VirtualDocInfo = {

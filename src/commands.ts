@@ -42,7 +42,7 @@ export const addClause = (client: IdrisClient) => async () => {
     const reply = await client.addClause(name, line + 1)
     if (reply.ok) {
       const insertAt = lineAfterDecl(line)
-      insertLine(reply.ok, insertAt)
+      insertLine(reply.initialClause, insertAt)
     }
   }
 }
@@ -73,7 +73,7 @@ export const addMissing = (client: IdrisClient) => async () => {
     const reply = await client.addMissing(name, line + 1)
     if (reply.ok) {
       const insertAt = lineAfterDecl(line)
-      insertLine(parseCaseBlockStmt(reply.ok), insertAt)
+      insertLine(parseCaseBlockStmt(reply.missingClauses), insertAt)
     }
   }
 }
@@ -84,10 +84,10 @@ const displayApropos = async (
 ): Promise<void> => {
   status("Searching for documentation that includes " + input + "...")
   const reply = await client.apropos(input)
-  if ("ok" in reply) {
+  if (reply.ok) {
     virtualDocState[reply.id] = {
-      text: reply.ok.docs,
-      metadata: reply.ok.metadata,
+      text: reply.docs,
+      metadata: reply.metadata,
     }
     const uri = vscode.Uri.parse("idris:" + reply.id)
     const doc = await vscode.workspace.openTextDocument(uri)
@@ -114,10 +114,10 @@ export const browseNamespace = (client: IdrisClient) => async () => {
   status("Searching for contents of " + input + "...")
   if (input) {
     const reply = await client.browseNamespace(input)
-    if ("ok" in reply) {
+    if (reply.ok) {
       const docInfo = stitchBrowseNamespace(
-        reply.ok.subModules,
-        reply.ok.declarations
+        reply.subModules,
+        reply.declarations
       )
       virtualDocState[reply.id] = docInfo
       const uri = vscode.Uri.parse("idris:" + reply.id)
@@ -135,8 +135,8 @@ export const caseSplit = (client: IdrisClient) => async () => {
     const { name, line } = selection
     await loadIfNot(client)
     const reply = await client.caseSplit(name, line + 1)
-    if ("ok" in reply) {
-      const caseStmt = reply.ok.trim()
+    if (reply.ok) {
+      const caseStmt = reply.caseClause.trim()
       if (caseStmt) {
         // The reply doesn’t preserve indentation, so if we’re replacing the
         // whole line, we want to first re-add the original indentation. Adding
@@ -154,10 +154,10 @@ export const caseSplit = (client: IdrisClient) => async () => {
 const displayDocsFor = async (client: IdrisClient, input: string) => {
   status("Getting documentation for " + input + "...")
   const reply = await client.docsFor(input, ":full")
-  if ("ok" in reply) {
+  if (reply.ok) {
     virtualDocState[reply.id] = {
-      text: reply.ok.docs,
-      metadata: reply.ok.metadata,
+      text: reply.docs,
+      metadata: reply.metadata,
     }
     const uri = vscode.Uri.parse("idris:" + reply.id)
     const doc = await vscode.workspace.openTextDocument(uri)
@@ -181,7 +181,7 @@ export const docsForSelection = (client: IdrisClient) => async () => {
 export const metavariables = (client: IdrisClient) => async () => {
   await loadIfNot(client)
   const reply = await client.metavariables(80)
-  const docInfo = stitchMetavariables(reply.ok)
+  const docInfo = stitchMetavariables(reply.metavariables)
   virtualDocState[reply.id] = docInfo
   const uri = vscode.Uri.parse("idris:" + reply.id)
   const doc = await vscode.workspace.openTextDocument(uri)
@@ -198,14 +198,14 @@ export const interpretSelection = (client: IdrisClient) => async () => {
     const { name, range } = selection
     await loadIfNot(client)
     const reply = await client.interpret(name)
-    if ("ok" in reply) {
+    if (reply.ok) {
       const opts: vscode.DecorationOptions = {
-        hoverMessage: { language: "idris", value: reply.ok.result },
+        hoverMessage: { language: "idris", value: reply.result },
         range,
         renderOptions: {
           after: {
             color: new vscode.ThemeColor("editorCursor.foreground"),
-            contentText: " => " + reply.ok.result,
+            contentText: " => " + reply.result,
             fontStyle: "italic",
           },
         },
@@ -221,10 +221,10 @@ const displayPrintDefinition = async (client: IdrisClient, input: string) => {
   status("Getting definition for " + input + "...")
   await loadIfNot(client)
   const reply = await client.printDefinition(input)
-  if ("ok" in reply) {
+  if (reply.ok) {
     virtualDocState[reply.id] = {
-      text: reply.ok.definition,
-      metadata: reply.ok.metadata,
+      text: reply.definition,
+      metadata: reply.metadata,
     }
     const uri = vscode.Uri.parse("idris:" + reply.id)
     const doc = await vscode.workspace.openTextDocument(uri)
@@ -265,7 +265,7 @@ export const makeCase = (client: IdrisClient) => async () => {
     const { name, line } = selection
     loadIfNot(client)
     const reply = await client.makeCase(trimMeta(name), line + 1)
-    const caseStmt = reply.ok.trim()
+    const caseStmt = reply.caseClause.trim()
     if (caseStmt) {
       // The reply doesn’t preserve indentation, so if we’re replacing the whole
       // line, we want to first re-add the original indentation. Adding the
@@ -285,13 +285,13 @@ export const makeLemma = (client: IdrisClient) => async () => {
     const { name, line } = selection
     await loadIfNot(client)
     const reply = await client.makeLemma(trimMeta(name), line + 1)
-    if ("ok" in reply) {
+    if (reply.ok) {
       const editor = vscode.window.activeTextEditor
       editor?.edit((eb) => {
         // when making multiple changes, they need to use the same edit-builder
         const declPos = new vscode.Position(prevEmptyLine(line), 0)
-        eb.insert(declPos, "\n" + reply.ok.declaration + "\n")
-        eb.replace(selection.range, reply.ok.metavariable)
+        eb.insert(declPos, "\n" + reply.declaration + "\n")
+        eb.replace(selection.range, reply.metavariable)
       })
     } else {
       status("Failed to make a lemma for " + name + ".")
@@ -305,7 +305,7 @@ export const makeWith = (client: IdrisClient) => async () => {
     const { name, line } = selection
     await loadIfNot(client)
     const reply = await client.makeWith(name, line + 1)
-    replaceLine(reply.ok.trim(), line)
+    replaceLine(reply.withClause.trim(), line)
   }
 }
 
@@ -316,8 +316,8 @@ export const proofSearch = (client: IdrisClient) => async () => {
     status("Solving for " + name + "...")
     await loadIfNot(client)
     const reply = await client.proofSearch(trimMeta(name), line + 1, [])
-    if ("ok" in reply && reply.ok !== name) {
-      replaceRange(reply.ok, selection.range)
+    if (reply.ok && reply.solution !== name) {
+      replaceRange(reply.solution, selection.range)
     } else {
       status("Could not find a solution for " + name + ".")
     }
@@ -325,9 +325,7 @@ export const proofSearch = (client: IdrisClient) => async () => {
 }
 
 export const version = (client: IdrisClient) => async () => {
-  const {
-    ok: { major, minor, patch, tags },
-  } = await client.version()
+  const { major, minor, patch, tags } = await client.version()
   const msg =
     "Idris version is " +
     major +

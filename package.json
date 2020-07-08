@@ -128,7 +128,7 @@
     "lint": "tsc --noEmit && prettier --check --write 'src/**/*.ts' && eslint src --ext .ts --fix"
   },
   "dependencies": {
-    "idris-ide-client": "0.1.1"
+    "idris-ide-client": "0.1.3"
   },
   "devDependencies": {
     "@types/node": "^13.11.0",
