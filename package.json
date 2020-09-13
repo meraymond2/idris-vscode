@@ -121,6 +121,17 @@
         "extensions": [
           ".ipkg"
         ]
+      },
+      {
+        "id": "lidr",
+        "aliases": [
+          "lidr",
+          "Literate Idris",
+          "literate idris"
+        ],
+        "extensions": [
+          ".lidr"
+        ]
       }
     ],
     "grammars": [
@@ -133,6 +144,11 @@
         "language": "ipkg",
         "scopeName": "source.ipkg",
         "path": "./syntaxes/ipkg.tmLanguage.json"
+      },
+      {
+        "language": "lidr",
+        "scopeName": "source.idris.literate",
+        "path": "./syntaxes/lidr.tmLanguage.json"
       }
     ]
   },
