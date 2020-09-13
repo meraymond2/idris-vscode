@@ -111,6 +111,16 @@
         "extensions": [
           ".idr"
         ]
+      },
+      {
+        "id": "ipkg",
+        "aliases": [
+          "iPKG",
+          "ipkg"
+        ],
+        "extensions": [
+          ".ipkg"
+        ]
       }
     ],
     "grammars": [
@@ -118,6 +128,11 @@
         "language": "idris",
         "scopeName": "source.idris",
         "path": "./syntaxes/idris.tmLanguage.json"
+      },
+      {
+        "language": "ipkg",
+        "scopeName": "source.ipkg",
+        "path": "./syntaxes/ipkg.tmLanguage.json"
       }
     ]
   },
