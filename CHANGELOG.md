@@ -1,5 +1,10 @@
 ## Unreleased
 ### Added
+### Changed
+### Fixed
+
+# 0.0.4
+### Added
 - Support for .ipkg and .lidr syntax highlighting
 
 ### Changed
