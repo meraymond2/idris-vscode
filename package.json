@@ -111,6 +111,27 @@
         "extensions": [
           ".idr"
         ]
+      },
+      {
+        "id": "ipkg",
+        "aliases": [
+          "iPKG",
+          "ipkg"
+        ],
+        "extensions": [
+          ".ipkg"
+        ]
+      },
+      {
+        "id": "lidr",
+        "aliases": [
+          "lidr",
+          "Literate Idris",
+          "literate idris"
+        ],
+        "extensions": [
+          ".lidr"
+        ]
       }
     ],
     "grammars": [
@@ -118,6 +139,16 @@
         "language": "idris",
         "scopeName": "source.idris",
         "path": "./syntaxes/idris.tmLanguage.json"
+      },
+      {
+        "language": "ipkg",
+        "scopeName": "source.ipkg",
+        "path": "./syntaxes/ipkg.tmLanguage.json"
+      },
+      {
+        "language": "lidr",
+        "scopeName": "source.idris.literate",
+        "path": "./syntaxes/lidr.tmLanguage.json"
       }
     ]
   },

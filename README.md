@@ -158,12 +158,13 @@ Under active development. Should be mostly working, but there are still features
 If you run into any problems, please raise an issue, or raise a PR if you want to.
 
 ## To Do
-- test on Windows & OSX
-- better syntax highlighting
 - implement Show References
-- literate programming support
-- ipkg support
 - there is more information to add to the metavariables command output
+- semantic highlighting for source code
+- more ipkg integration
+
+## Acknowledgments
+The syntax files are taken from [vscode-idris’s](https://github.com/zjhmale/vscode-idris) port of the [Atom plugin’s](https://github.com/idris-hackers/atom-language-idris) grammars.
 
 ## License
 [MIT](LICENSE)
