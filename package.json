@@ -10,7 +10,7 @@
     "url": "https://github.com/meraymond2/idris-vscode"
   },
   "engines": {
-    "vscode": "^1.44.1"
+    "vscode": "^1.49.0"
   },
   "categories": [
     "Programming Languages"
