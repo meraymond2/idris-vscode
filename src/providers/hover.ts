@@ -16,6 +16,7 @@ export class Provider implements vscode.HoverProvider {
   ): vscode.ProviderResult<vscode.Hover> {
     return new Promise(async (res) => {
       const range = document.getWordRangeAtPosition(position)
+      if (!range) res(null)
       const name = document.getText(range)
       const reply = await this.client.typeOf(name)
       if (reply.ok) {
