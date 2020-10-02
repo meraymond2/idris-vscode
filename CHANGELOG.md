@@ -1,6 +1,8 @@
 ## Unreleased
 ### Added
 ### Changed
+- Bump dev dependencies to appease our dependabot overlords
+
 ### Fixed
 
 # 0.0.4
