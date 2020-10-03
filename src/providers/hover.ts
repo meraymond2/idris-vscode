@@ -1,6 +1,5 @@
 import * as vscode from "vscode"
 import { IdrisClient } from "idris-ide-client"
-import { deflate } from "zlib"
 export const selector = { language: "idris" }
 
 type DocState =
@@ -35,6 +34,11 @@ class DocStateParser {
     this.line = 0
     this.col = 0
     this.pos = 0
+
+    this.consumeNextDelim = this.consumeNextDelim.bind(this)
+    this.atEndPos = this.atEndPos.bind(this)
+    this.incLine = this.incLine.bind(this)
+    this.parseToEndPos = this.parseToEndPos.bind(this)
   }
 
   static nextState(currentState: DocState, delim: Delimiter): DocState {
@@ -106,21 +110,25 @@ class DocStateParser {
           this.text[this.pos + 2] === '"'
         ) {
           this.pos += 3
+          this.col += 3
           return "multi-line-string-delim"
         } else if (this.text[this.pos] === '"') {
           this.pos += 1
+          this.col += 1
           return "string-delim"
         } else if (
           this.text[this.pos] === "-" &&
           this.text[this.pos + 1] === "-"
         ) {
           this.pos += 2
+          this.col += 2
           return "start-line-comment"
         } else if (
           this.text[this.pos] === "{" &&
           this.text[this.pos + 1] === "-"
         ) {
           this.pos += 2
+          this.col += 2
           return "start-block-comment"
         } else if (
           this.text[this.pos] === "|" &&
@@ -128,6 +136,7 @@ class DocStateParser {
           this.text[this.pos + 2] === "|"
         ) {
           this.pos += 3
+          this.col += 3
           return "start-doc-comment"
         } else return null
       }
@@ -143,6 +152,7 @@ class DocStateParser {
       case "block-comment": {
         if (this.text[this.pos] === "-" && this.text[this.pos + 1] === "}") {
           this.pos += 2
+          this.col += 2
           return "end-block-comment"
         } else {
           return null
@@ -167,6 +177,7 @@ class DocStateParser {
           if (quotesAreEscaped) return null
           else {
             this.pos += 1
+            this.col += 1
             return "string-delim"
           }
         } else {
@@ -187,6 +198,7 @@ class DocStateParser {
           if (quotesAreEscaped) return null
           else {
             this.pos += 3
+            this.col += 3
             return "multi-line-string-delim"
           }
         } else {
@@ -197,17 +209,22 @@ class DocStateParser {
   }
 
   atEndPos(): boolean {
-    return this.line <= this.endPos.line && this.col <= this.endPos.character
+    return this.line >= this.endPos.line && this.col >= this.endPos.character
   }
 
   parseToEndPos(): DocState {
-    while (this.atEndPos()) {
+    while (!this.atEndPos()) {
       const delim = this.consumeNextDelim()
       if (delim) {
         this.state = DocStateParser.nextState(this.state, delim)
       } else {
-        if (this.text[this.pos] === "\n") this.incLine()
-        this.pos += 1
+        if (this.text[this.pos] === "\n") {
+          this.incLine()
+          this.pos += 1
+        } else {
+          this.pos += 1
+          this.col += 1
+        }
       }
     }
     return this.state

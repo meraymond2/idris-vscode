@@ -45,9 +45,11 @@ export const activate = (context: vscode.ExtensionContext) => {
 
   idrisProc = spawn(config.idrisPath, ["--ide-mode"])
 
-  idrisProc.on("error", (_ => {
-    vscode.window.showErrorMessage("Could not start Idris process with: " + config.idrisPath)
-  }))
+  idrisProc.on("error", (_) => {
+    vscode.window.showErrorMessage(
+      "Could not start Idris process with: " + config.idrisPath
+    )
+  })
 
   if (!(idrisProc.stdin && idrisProc.stdout)) {
     throw "Failed to start Idris process." // unreachable
