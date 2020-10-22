@@ -4,6 +4,7 @@
 - Bump dev dependencies to appease our dependabot overlords
 
 ### Fixed
+- Fix hover text in inappropriate contexts (https://github.com/meraymond2/idris-vscode/issues/1)
 
 # 0.0.4
 ### Added
