@@ -97,6 +97,11 @@
           "type": "string",
           "default": "idris",
           "description": "Command to start Idris process."
+        },
+        "idris.idris2Mode": {
+          "type": "boolean",
+          "default": false,
+          "description": "Toggle Idris2 mode. Targets the latest release, currently 0.2.1. Note that not all commands are implemented yet."
         }
       }
     },
