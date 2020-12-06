@@ -3,6 +3,7 @@
 Support for [Idris](https://www.idris-lang.org/), the dependently-typed, functional language.
 
 - [Requirements](#requirements)
+- [Idris 2](#idris-2)
 - [Commands](#commands)
   - [Code Navigation](#code-navigation)
   - [Code Editing](#code-editing)
@@ -38,9 +39,11 @@ Support for [Idris](https://www.idris-lang.org/), the dependently-typed, functio
 You’ll need Idris installed. If it’s not on your $PATH, you can specify the path to the executable in the config.
 
 ## Idris 2
-Currently the extension will default to v1. If you want it to use Idris 2, you can simply change the Idris path in your config.
+Currently the extension will default to v1. If you want it to use Idris 2, change the path in the configuration to your Idris 2 binary, and tick the `Idris 2 Mode` checkbox.
 
-At the moment, the majority of the IDE commands haven’t been implemented in Idris 2. Most will simply return an empty reply. It should provide limited functionality though.
+Only the current version of Idris 2 is supported, which at the moment is 0.2.1. If you experience problems, please make sure you are using the most recent version.
+
+At the moment, some of the IDE commands haven’t been implemented in Idris 2.
 
 ## Commands
 
@@ -164,7 +167,7 @@ If you run into any problems, please raise an issue, or raise a PR if you want t
 - more ipkg integration
 
 ## Acknowledgments
-The syntax files are taken from [vscode-idris’s](https://github.com/zjhmale/vscode-idris) port of the [Atom plugin’s](https://github.com/idris-hackers/atom-language-idris) grammars.
+The syntax files are adapted from [vscode-idris’s](https://github.com/zjhmale/vscode-idris) port of the [Atom plugin’s](https://github.com/idris-hackers/atom-language-idris) grammars.
 
 ## License
 [MIT](LICENSE)
