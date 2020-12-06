@@ -10,6 +10,8 @@ export interface State {
   client: IdrisClient | null
   diagnostics: vscode.DiagnosticCollection
   idrisProc: ChildProcess | null
+  idrisProcDir: string | null
+  idris2Mode: boolean
   virtualDocState: Record<string, VirtualDocInfo>
 }
 
@@ -17,6 +19,8 @@ export const state: State = {
   client: null,
   diagnostics: vscode.languages.createDiagnosticCollection("Idris Errors"),
   idrisProc: null,
+  idrisProcDir: null,
+  idris2Mode: false,
   virtualDocState: {},
 }
 
@@ -36,14 +40,17 @@ export const initialiseState = () => {
   const workspacePaths = vscode.workspace.workspaceFolders?.map(
     (folder) => folder.uri.path
   )
+  let idrisProcDir = null
+  if (idris2Mode && workspacePaths?.length === 1) {
+    idrisProcDir = workspacePaths[0]
+  }
 
   /* Idris2 won’t locate the ipkg file by default if the code is in another
   directory, so it’s necessary to pass the --find-ipkg flag. It looks for the ipkg
   in parent directories of the process, so it’s also necessary to start the Idris
   process in the workspace directory.*/
   const procArgs = idris2Mode ? ["--ide-mode", "--find-ipkg"] : ["--ide-mode"]
-  const procOpts =
-    idris2Mode && workspacePaths?.length === 1 ? { cwd: workspacePaths[0] } : {}
+  const procOpts = idrisProcDir ? { cwd: idrisProcDir } : {}
   const idrisProc = spawn(idrisPath, procArgs, procOpts)
 
   idrisProc.on("error", (_) => {
@@ -61,6 +68,8 @@ export const initialiseState = () => {
     replyCallback,
   })
 
-  state.idrisProc = idrisProc
   state.client = client
+  state.idrisProc = idrisProc
+  state.idrisProcDir = idrisProcDir
+  state.idris2Mode = idris2Mode
 }
