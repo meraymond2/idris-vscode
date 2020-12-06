@@ -33,8 +33,18 @@ export const initialiseState = () => {
   const idrisPath: string = extensionConfig.get("idrisPath") || ""
   const idris2Mode: boolean = extensionConfig.get("idris2Mode") || false
 
+  const workspacePaths = vscode.workspace.workspaceFolders?.map(
+    (folder) => folder.uri.path
+  )
+
+  /* Idris2 won’t locate the ipkg file by default if the code is in another
+  directory, so it’s necessary to pass the --find-ipkg flag. It looks for the ipkg
+  in parent directories of the process, so it’s also necessary to start the Idris
+  process in the workspace directory.*/
   const procArgs = idris2Mode ? ["--ide-mode", "--find-ipkg"] : ["--ide-mode"]
-  const idrisProc = spawn(idrisPath, procArgs)
+  const procOpts =
+    idris2Mode && workspacePaths?.length === 1 ? { cwd: workspacePaths[0] } : {}
+  const idrisProc = spawn(idrisPath, procArgs, procOpts)
 
   idrisProc.on("error", (_) => {
     vscode.window.showErrorMessage(
@@ -47,7 +57,7 @@ export const initialiseState = () => {
   }
 
   const client = new IdrisClient(idrisProc.stdin, idrisProc.stdout, {
-    debug: true,
+    debug: false,
     replyCallback,
   })
 
