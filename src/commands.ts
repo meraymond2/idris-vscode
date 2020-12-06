@@ -13,8 +13,6 @@ import {
 import { stitchBrowseNamespace, stitchMetavariables } from "./message-stitching"
 import { state } from "./state"
 
-let loaded: string = ""
-
 /**
  * Many of the calls that accept the name of a metavariable don’t expect the
  * name to begin with the leading ?, so it has to be removed first.
@@ -24,10 +22,17 @@ const trimMeta = (name: string) =>
 
 const status = (msg: string) => vscode.window.setStatusBarMessage(msg, 2000)
 
+const unimplementedV2 = (actionName: string): void => {
+  vscode.window.showWarningMessage(
+    actionName + " is not yet implemented for Idris 2."
+  )
+  return
+}
+
 const loadIfNot = (client: IdrisClient): Promise<void> => {
   const doc = vscode.window.activeTextEditor?.document
   return new Promise((res) => {
-    if (doc && doc.fileName !== loaded) {
+    if (doc && doc.fileName !== state.currentFile) {
       res(loadFile(client, doc))
     }
     res()
@@ -253,7 +258,7 @@ export const loadFile = async (
     if (document.languageId === "idris") {
       res(
         client.loadFile(document.fileName).then(() => {
-          loaded = document.fileName
+          state.currentFile = document.fileName
         })
       )
     } else res()
@@ -325,6 +330,8 @@ export const proofSearch = (client: IdrisClient) => async () => {
 }
 
 export const version = (client: IdrisClient) => async () => {
+  if (state.idris2Mode) return unimplementedV2("Version")
+
   const { major, minor, patch, tags } = await client.version()
   const msg =
     "Idris version is " +

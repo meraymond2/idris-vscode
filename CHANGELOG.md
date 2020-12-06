@@ -4,6 +4,7 @@
 - Bump dev dependencies to appease our dependabot overlords
 - Added a config flag to enable Idris 2 mode.
 - Added a config option to turn off the hover behaviour.
+- Added a warning for trying to call Version from Idris 2.
 
 ### Fixed
 - Fix hover text in inappropriate contexts (https://github.com/meraymond2/idris-vscode/issues/1)

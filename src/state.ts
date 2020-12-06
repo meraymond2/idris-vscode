@@ -10,6 +10,7 @@ type HoverBehaviour = "Type Of" | "Nothing"
 
 export interface State {
   client: IdrisClient | null
+  currentFile: string
   diagnostics: vscode.DiagnosticCollection
   hoverAction: HoverBehaviour
   idrisProc: ChildProcess | null
@@ -20,6 +21,7 @@ export interface State {
 
 export const state: State = {
   client: null,
+  currentFile: "",
   diagnostics: vscode.languages.createDiagnosticCollection("Idris Errors"),
   hoverAction: "Type Of",
   idrisProc: null,
