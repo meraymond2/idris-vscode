@@ -11,9 +11,7 @@ import {
   currentSelection,
 } from "./editing"
 import { stitchBrowseNamespace, stitchMetavariables } from "./message-stitching"
-import { virtualDocState } from "./global-state"
-
-let loaded: string = ""
+import { state } from "./state"
 
 /**
  * Many of the calls that accept the name of a metavariable don’t expect the
@@ -24,10 +22,17 @@ const trimMeta = (name: string) =>
 
 const status = (msg: string) => vscode.window.setStatusBarMessage(msg, 2000)
 
+const unimplementedV2 = (actionName: string): void => {
+  vscode.window.showWarningMessage(
+    actionName + " is not yet implemented for Idris 2."
+  )
+  return
+}
+
 const loadIfNot = (client: IdrisClient): Promise<void> => {
   const doc = vscode.window.activeTextEditor?.document
   return new Promise((res) => {
-    if (doc && doc.fileName !== loaded) {
+    if (doc && doc.fileName !== state.currentFile) {
       res(loadFile(client, doc))
     }
     res()
@@ -85,7 +90,7 @@ const displayApropos = async (
   status("Searching for documentation that includes " + input + "...")
   const reply = await client.apropos(input)
   if (reply.ok) {
-    virtualDocState[reply.id] = {
+    state.virtualDocState[reply.id] = {
       text: reply.docs,
       metadata: reply.metadata,
     }
@@ -119,7 +124,7 @@ export const browseNamespace = (client: IdrisClient) => async () => {
         reply.subModules,
         reply.declarations
       )
-      virtualDocState[reply.id] = docInfo
+      state.virtualDocState[reply.id] = docInfo
       const uri = vscode.Uri.parse("idris:" + reply.id)
       const doc = await vscode.workspace.openTextDocument(uri)
       await vscode.window.showTextDocument(doc)
@@ -155,7 +160,7 @@ const displayDocsFor = async (client: IdrisClient, input: string) => {
   status("Getting documentation for " + input + "...")
   const reply = await client.docsFor(input, ":full")
   if (reply.ok) {
-    virtualDocState[reply.id] = {
+    state.virtualDocState[reply.id] = {
       text: reply.docs,
       metadata: reply.metadata,
     }
@@ -182,7 +187,7 @@ export const metavariables = (client: IdrisClient) => async () => {
   await loadIfNot(client)
   const reply = await client.metavariables(80)
   const docInfo = stitchMetavariables(reply.metavariables)
-  virtualDocState[reply.id] = docInfo
+  state.virtualDocState[reply.id] = docInfo
   const uri = vscode.Uri.parse("idris:" + reply.id)
   const doc = await vscode.workspace.openTextDocument(uri)
   await vscode.window.showTextDocument(doc)
@@ -222,7 +227,7 @@ const displayPrintDefinition = async (client: IdrisClient, input: string) => {
   await loadIfNot(client)
   const reply = await client.printDefinition(input)
   if (reply.ok) {
-    virtualDocState[reply.id] = {
+    state.virtualDocState[reply.id] = {
       text: reply.definition,
       metadata: reply.metadata,
     }
@@ -253,7 +258,7 @@ export const loadFile = async (
     if (document.languageId === "idris") {
       res(
         client.loadFile(document.fileName).then(() => {
-          loaded = document.fileName
+          state.currentFile = document.fileName
         })
       )
     } else res()
@@ -325,6 +330,8 @@ export const proofSearch = (client: IdrisClient) => async () => {
 }
 
 export const version = (client: IdrisClient) => async () => {
+  if (state.idris2Mode) return unimplementedV2("Version")
+
   const { major, minor, patch, tags } = await client.version()
   const msg =
     "Idris version is " +

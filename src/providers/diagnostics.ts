@@ -1,6 +1,6 @@
 import * as vscode from "vscode"
 import { InfoReply } from "idris-ide-client"
-import { diagnostics } from "../global-state"
+import { state } from "../state"
 
 const warningToDiagnostic = (reply: InfoReply.Warning): vscode.Diagnostic => {
   const { start, end, warning } = reply.err
@@ -12,8 +12,17 @@ const warningToDiagnostic = (reply: InfoReply.Warning): vscode.Diagnostic => {
 }
 
 export const handleWarning = (reply: InfoReply.Warning): void => {
+  const { diagnostics, idrisProcDir, idris2Mode } = state
   const filename = reply.err.filename
-  const uri = vscode.Uri.file(filename)
-  const existing = diagnostics.get(uri) || []
-  diagnostics.set(uri, existing.concat(warningToDiagnostic(reply)))
+
+  // Idris2 uses relative file paths, which aren’t parsed into file URIs correctly on their own.
+  if (idris2Mode && idrisProcDir) {
+    const uri = vscode.Uri.file(idrisProcDir + "/" + filename)
+    const existing = diagnostics.get(uri) || []
+    diagnostics.set(uri, existing.concat(warningToDiagnostic(reply)))
+  } else {
+    const uri = vscode.Uri.file(filename)
+    const existing = diagnostics.get(uri) || []
+    diagnostics.set(uri, existing.concat(warningToDiagnostic(reply)))
+  }
 }

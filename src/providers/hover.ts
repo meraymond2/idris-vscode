@@ -1,5 +1,6 @@
 import * as vscode from "vscode"
 import { IdrisClient } from "idris-ide-client"
+import { state } from "../state"
 export const selector = { language: "idris" }
 
 type DocState =
@@ -243,21 +244,26 @@ export class Provider implements vscode.HoverProvider {
     position: vscode.Position,
     _token: vscode.CancellationToken
   ): vscode.ProviderResult<vscode.Hover> {
-    return new Promise(async (res) => {
-      const range = document.getWordRangeAtPosition(position)
-      if (!range) res(null)
+    switch (state.hoverAction) {
+      case "Nothing":
+        return null
+      case "Type Of":
+        return new Promise(async (res) => {
+          const range = document.getWordRangeAtPosition(position)
+          if (!range) res(null)
 
-      const parser = new DocStateParser(document.getText(), position)
-      const docStateAtPos = parser.parseToEndPos()
-      if (docStateAtPos !== "code") res(null)
+          const parser = new DocStateParser(document.getText(), position)
+          const docStateAtPos = parser.parseToEndPos()
+          if (docStateAtPos !== "code") res(null)
 
-      const name = document.getText(range)
-      const reply = await this.client.typeOf(name)
-      if (reply.ok) {
-        res({ contents: [{ value: reply.typeOf, language: "idris" }] })
-      } else {
-        res(null)
-      }
-    })
+          const name = document.getText(range)
+          const reply = await this.client.typeOf(name)
+          if (reply.ok) {
+            res({ contents: [{ value: reply.typeOf, language: "idris" }] })
+          } else {
+            res(null)
+          }
+        })
+    }
   }
 }

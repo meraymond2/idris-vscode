@@ -1,7 +1,7 @@
 import * as vscode from "vscode"
 import { MessageMetadata } from "idris-ide-client"
 import { scheme } from "./virtual-docs"
-import { virtualDocState } from "../global-state"
+import { state } from "../state"
 
 // * In short, each token takes 5 integers to represent, so a specific token `i` in the file consists of the following array indices:
 // *  - at index `5*i`   - `deltaLine`: token line number, relative to the previous token
@@ -117,7 +117,7 @@ export const provider: vscode.DocumentSemanticTokensProvider = {
   provideDocumentSemanticTokens(
     document: vscode.TextDocument
   ): vscode.ProviderResult<vscode.SemanticTokens> {
-    const info = virtualDocState[document.uri.path]
+    const info = state.virtualDocState[document.uri.path]
     return new Promise((resolve) => {
       if (info) {
         const { text, metadata } = info
