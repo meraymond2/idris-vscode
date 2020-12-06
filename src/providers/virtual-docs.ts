@@ -1,6 +1,6 @@
 import * as vscode from "vscode"
 import { MessageMetadata } from "idris-ide-client"
-import { virtualDocState } from "../global-state"
+import { state } from "../state"
 
 export type VirtualDocInfo = {
   text: string
@@ -14,7 +14,7 @@ export type VirtualDocInfo = {
  */
 export const provider: vscode.TextDocumentContentProvider = {
   provideTextDocumentContent(uri: vscode.Uri): string {
-    const info = virtualDocState[uri.path]
+    const info = state.virtualDocState[uri.path]
     return info ? info.text : ""
   },
 }

@@ -1,5 +1,4 @@
 import * as vscode from "vscode"
-import { IdrisClient, Reply } from "idris-ide-client"
 import {
   addClause,
   addMissing,
@@ -21,44 +20,36 @@ import {
   proofSearch,
   version,
 } from "./commands"
-import { virtualDocState, diagnostics } from "./global-state"
 import * as completions from "./providers/completions"
-import { handleWarning } from "./providers/diagnostics"
+
 import * as hover from "./providers/hover"
 import * as messageHighlighting from "./providers/message-highlighting"
 import * as virtualDocs from "./providers/virtual-docs"
-import { ChildProcess, spawn } from "child_process"
+import { initialiseState, state } from "./state"
 
-let idrisProc: ChildProcess
+const promptReload = () => {
+  const action = "Reload Now"
 
-const replyCallback = (reply: Reply): void => {
-  switch (reply.type) {
-    case ":warning":
-      return handleWarning(reply)
-    default:
-  }
+  vscode.window
+    .showInformationMessage(
+      "Reload window in order for configuration changes to take effect.",
+      action
+    )
+    .then((selectedAction) => {
+      if (selectedAction === action) {
+        vscode.commands.executeCommand("workbench.action.reloadWindow")
+      }
+    })
 }
 
 export const activate = (context: vscode.ExtensionContext) => {
-  /* Initialisation */
-  const config = vscode.workspace.getConfiguration("idris")
-
-  idrisProc = spawn(config.idrisPath, ["--ide-mode"])
-
-  idrisProc.on("error", (_) => {
-    vscode.window.showErrorMessage(
-      "Could not start Idris process with: " + config.idrisPath
-    )
-  })
-
-  if (!(idrisProc.stdin && idrisProc.stdout)) {
-    throw "Failed to start Idris process." // unreachable
+  initialiseState()
+  const { client, diagnostics, virtualDocState } = state
+  if (client === null) {
+    throw "Client should have been initialised by this point."
   }
 
-  const client = new IdrisClient(idrisProc.stdin, idrisProc.stdout, {
-    debug: false,
-    replyCallback,
-  })
+  vscode.workspace.onDidChangeConfiguration(promptReload)
 
   vscode.workspace.registerTextDocumentContentProvider(
     virtualDocs.scheme,
@@ -196,5 +187,5 @@ export const activate = (context: vscode.ExtensionContext) => {
 }
 
 export const deactivate = () => {
-  idrisProc.kill()
+  state.idrisProc?.kill()
 }

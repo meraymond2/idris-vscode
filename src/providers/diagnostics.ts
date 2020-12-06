@@ -1,6 +1,6 @@
 import * as vscode from "vscode"
 import { InfoReply } from "idris-ide-client"
-import { diagnostics } from "../global-state"
+import { state } from "../state"
 
 const warningToDiagnostic = (reply: InfoReply.Warning): vscode.Diagnostic => {
   const { start, end, warning } = reply.err
@@ -12,6 +12,7 @@ const warningToDiagnostic = (reply: InfoReply.Warning): vscode.Diagnostic => {
 }
 
 export const handleWarning = (reply: InfoReply.Warning): void => {
+  const { diagnostics } = state
   const filename = reply.err.filename
   const uri = vscode.Uri.file(filename)
   const existing = diagnostics.get(uri) || []
