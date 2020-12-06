@@ -150,7 +150,10 @@
         { "include": "#parameter_type" },
         { "include": "#language_const" },
         { "include": "#operator" },
-        { "include": "#quasiquote" },
+        { "include": "#quasiquote_paren" },
+        { "include": "#quasiquote_double_bracket" },
+        { "include": "#quasiquote_bracket" },
+        { "include": "#quasiquote_square_bracket" },
         { "include": "#infix_function" },
         { "include": "#prelude_type" },
         { "include": "#delimiter" },
@@ -245,7 +248,7 @@
       "name": "keyword.operator.idris",
       "match": "\\?[-!#\\$%&\\*\\+\\.\\/<=>@\\\\^|~:]+|[-!#\\$%&\\*\\+\\.\\/<=>@\\\\^|~:\\?][-!#\\$%&\\*\\+\\.\\/<=>@\\\\^|~:]*"
     },
-    "quasiquote": {
+    "quasiquote_bracket": {
       "name": "meta.quasiquote.idris",
       "begin": "`{",
       "beginCaptures": {
@@ -254,6 +257,75 @@
         }
       },
       "end": "}",
+      "endCaptures": {
+        "0": {
+          "name": "keyword.operator.quasiquote.idris"
+        }
+      },
+      "patterns": [
+        {
+          "name": "keyword.operator.arrow.idris",
+          "match": "->"
+        },
+        { "include": "#parameter_type" },
+        { "include": "#ty_expression" }
+      ]
+    },
+    "quasiquote_paren": {
+      "name": "meta.quasiquote.idris",
+      "begin": "`\\(",
+      "beginCaptures": {
+        "0": {
+          "name": "keyword.operator.quasiquote.idris"
+        }
+      },
+      "end": "\\)",
+      "endCaptures": {
+        "0": {
+          "name": "keyword.operator.quasiquote.idris"
+        }
+      },
+      "patterns": [
+        {
+          "name": "keyword.operator.arrow.idris",
+          "match": "->"
+        },
+        { "include": "#parameter_type" },
+        { "include": "#ty_expression" }
+      ]
+    },
+    "quasiquote_double_bracket": {
+      "name": "meta.quasiquote.idris",
+      "begin": "`{{",
+      "beginCaptures": {
+        "0": {
+          "name": "keyword.operator.quasiquote.idris"
+        }
+      },
+      "end": "}}",
+      "endCaptures": {
+        "0": {
+          "name": "keyword.operator.quasiquote.idris"
+        }
+      },
+      "patterns": [
+        {
+          "name": "keyword.operator.arrow.idris",
+          "match": "->"
+        },
+        { "include": "#parameter_type" },
+        { "include": "#ty_expression" }
+      ]
+    },
+    "quasiquote_square_bracket": {
+      "name": "meta.quasiquote.idris",
+      "begin": "`\\[",
+      "beginCaptures": {
+        "0": {
+          "name": "keyword.operator.quasiquote.idris"
+        }
+      },
+      "end": "\\]",
       "endCaptures": {
         "0": {
           "name": "keyword.operator.quasiquote.idris"
