@@ -6,9 +6,12 @@ import { VirtualDocInfo } from "./providers/virtual-docs"
 
 // I’m not using the Memento API because I don’t want persistence across sessions, and I do want type-safety.
 
+type HoverBehaviour = "Type Of" | "Nothing"
+
 export interface State {
   client: IdrisClient | null
   diagnostics: vscode.DiagnosticCollection
+  hoverAction: HoverBehaviour
   idrisProc: ChildProcess | null
   idrisProcDir: string | null
   idris2Mode: boolean
@@ -18,6 +21,7 @@ export interface State {
 export const state: State = {
   client: null,
   diagnostics: vscode.languages.createDiagnosticCollection("Idris Errors"),
+  hoverAction: "Type Of",
   idrisProc: null,
   idrisProcDir: null,
   idris2Mode: false,
@@ -36,6 +40,9 @@ export const initialiseState = () => {
   const extensionConfig = vscode.workspace.getConfiguration("idris")
   const idrisPath: string = extensionConfig.get("idrisPath") || ""
   const idris2Mode: boolean = extensionConfig.get("idris2Mode") || false
+  const hoverAction: HoverBehaviour | undefined = extensionConfig.get(
+    "hoverAction"
+  )
 
   const workspacePaths = vscode.workspace.workspaceFolders?.map(
     (folder) => folder.uri.path
@@ -72,4 +79,5 @@ export const initialiseState = () => {
   state.idrisProc = idrisProc
   state.idrisProcDir = idrisProcDir
   state.idris2Mode = idris2Mode
+  if (hoverAction) state.hoverAction = hoverAction
 }
