@@ -1,6 +1,8 @@
 ## Unreleased
 ### Added
 ### Changed
+- Added a warning when load file fails in Idris2 because of errors.
+
 ### Fixed
 
 # 0.0.5
