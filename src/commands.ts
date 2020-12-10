@@ -253,16 +253,18 @@ export const printDefinitionSelection = (client: IdrisClient) => async () => {
 export const loadFile = async (
   client: IdrisClient,
   document: vscode.TextDocument
-): Promise<void> =>
-  new Promise((res) => {
-    if (document.languageId === "idris") {
-      res(
-        client.loadFile(document.fileName).then(() => {
-          state.currentFile = document.fileName
-        })
-      )
-    } else res()
-  })
+): Promise<void> => {
+  if (document.languageId === "idris") {
+    const reply = await client.loadFile(document.fileName)
+    if (reply.ok) {
+      state.currentFile = document.fileName
+    } else if (state.idris2Mode) {
+      status("File failed to typecheck — commands will not work until it does.")
+    } else {
+      status("Failed to load file.")
+    }
+  }
+}
 
 export const makeCase = (client: IdrisClient) => async () => {
   const selection = currentWord()
