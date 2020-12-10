@@ -4,6 +4,7 @@
 - Added a warning when load file fails in Idris2 because of errors.
 
 ### Fixed
+- Fixed a bug that could lead to incorrect paths in the diagnostic URIs.
 
 # 0.0.5
 ### Added
