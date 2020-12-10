@@ -43,7 +43,7 @@ Currently the extension will default to v1. If you want it to use Idris 2, chang
 
 Only the current version of Idris 2 is supported, which at the moment is 0.2.1. If you experience problems, please make sure you are using the most recent version.
 
-At the moment, some of the IDE commands haven’t been implemented in Idris 2.
+At the moment, some of the IDE commands haven’t been implemented in Idris 2. There are no completions yet either.
 
 ## Commands
 
