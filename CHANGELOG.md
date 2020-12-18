@@ -1,6 +1,7 @@
 ## Unreleased
 ### Added
 ### Changed
+- Trim leading `?` so hover can show types of metavariables.
 ### Fixed
 
 ## 0.0.6
