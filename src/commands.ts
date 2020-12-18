@@ -29,11 +29,32 @@ const unimplementedV2 = (actionName: string): void => {
   return
 }
 
+const autosave = async (doc: vscode.TextDocument) => {
+  if (doc.isDirty) {
+    switch (state.autosave) {
+      case "always": {
+        const saved = await doc.save()
+        if (!saved) vscode.window.showErrorMessage("Failed to save file.")
+        break
+      }
+      case "never":
+        break
+      case "prompt":
+        const shouldSave = await vscode.window.showQuickPick(["Save", "Cancel"])
+        if (shouldSave === "Save") {
+          const saved = await doc.save()
+          if (!saved) vscode.window.showErrorMessage("Failed to save file.")
+        }
+        break
+    }
+  }
+}
+
 const ensureLoaded = (client: IdrisClient): Promise<void> =>
-  new Promise((res) => {
+  new Promise(async (res) => {
     const doc = vscode.window.activeTextEditor?.document
     if (doc) {
-      console.log("Changed?: " + doc.isDirty)
+      await autosave(doc)
       if (doc && doc.fileName !== state.currentFile) {
         res(loadFile(client, doc))
       }
