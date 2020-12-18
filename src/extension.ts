@@ -25,7 +25,12 @@ import * as completions from "./providers/completions"
 import * as hover from "./providers/hover"
 import * as messageHighlighting from "./providers/message-highlighting"
 import * as virtualDocs from "./providers/virtual-docs"
-import { HoverBehaviour, initialiseState, state } from "./state"
+import {
+  AutoSaveBehaviour,
+  HoverBehaviour,
+  initialiseState,
+  state,
+} from "./state"
 
 const promptReload = () => {
   const action = "Reload Now"
@@ -51,6 +56,14 @@ export const activate = (context: vscode.ExtensionContext) => {
 
   vscode.workspace.onDidChangeConfiguration(
     (changeEvent: vscode.ConfigurationChangeEvent) => {
+      if (changeEvent.affectsConfiguration("idris.autosave")) {
+        const autosave:
+          | AutoSaveBehaviour
+          | undefined = vscode.workspace
+          .getConfiguration("idris")
+          .get("autosave")
+        if (autosave) state.autosave = autosave
+      }
       if (changeEvent.affectsConfiguration("idris.hoverAction")) {
         const hoverAction:
           | HoverBehaviour

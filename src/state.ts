@@ -6,9 +6,11 @@ import { VirtualDocInfo } from "./providers/virtual-docs"
 
 // I’m not using the Memento API because I don’t want persistence across sessions, and I do want type-safety.
 
+export type AutoSaveBehaviour = "always" | "prompt" | "never"
 export type HoverBehaviour = "Type Of" | "Nothing"
 
 export interface State {
+  autosave: AutoSaveBehaviour
   client: IdrisClient | null
   currentFile: string
   diagnostics: vscode.DiagnosticCollection
@@ -21,6 +23,7 @@ export interface State {
 }
 
 export const state: State = {
+  autosave: "always",
   client: null,
   currentFile: "",
   diagnostics: vscode.languages.createDiagnosticCollection("Idris Errors"),
@@ -44,6 +47,9 @@ export const initialiseState = () => {
   const extensionConfig = vscode.workspace.getConfiguration("idris")
   const idrisPath: string = extensionConfig.get("idrisPath") || ""
   const idris2Mode: boolean = extensionConfig.get("idris2Mode") || false
+  const autosave: AutoSaveBehaviour | undefined = extensionConfig.get(
+    "autosave"
+  )
   const hoverAction: HoverBehaviour | undefined = extensionConfig.get(
     "hoverAction"
   )
@@ -83,5 +89,6 @@ export const initialiseState = () => {
   state.idrisProc = idrisProc
   state.idrisProcDir = idrisProcDir
   state.idris2Mode = idris2Mode
+  if (autosave) state.autosave = autosave
   if (hoverAction) state.hoverAction = hoverAction
 }
