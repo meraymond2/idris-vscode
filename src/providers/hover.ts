@@ -257,7 +257,9 @@ export class Provider implements vscode.HoverProvider {
           if (docStateAtPos !== "code") res(null)
 
           const name = document.getText(range)
-          const trimmed = name.startsWith("?") ? name.slice(1, name.length) : name
+          const trimmed = name.startsWith("?")
+            ? name.slice(1, name.length)
+            : name
           const reply = await this.client.typeOf(trimmed)
           if (reply.ok) {
             res({ contents: [{ value: reply.typeOf, language: "idris" }] })

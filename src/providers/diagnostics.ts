@@ -13,7 +13,7 @@ const warningToDiagnostic = (reply: InfoReply.Warning): vscode.Diagnostic => {
 }
 
 export const handleWarning = (reply: InfoReply.Warning): void => {
-  const { diagnostics, idrisProcDir, idris2Mode } = state
+  const { diagnostics, idrisProcDir } = state
   const filename = reply.err.filename
 
   // Idris2 sometimes uses relative file paths, which aren’t parsed into file URIs correctly on their own.

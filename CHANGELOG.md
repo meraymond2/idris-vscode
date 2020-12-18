@@ -3,6 +3,7 @@
 ### Changed
 - Trim leading `?` so hover can show types of metavariables.
 ### Fixed
+- Fix a bug where extension would prompt for reload on _any_ config change.
 
 ## 0.0.6
 ### Added
