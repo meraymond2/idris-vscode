@@ -103,6 +103,15 @@
           "default": false,
           "description": "Configure the extension to work with Idris2. Targets the latest release, currently 0.2.1. Note that not all commands are implemented yet."
         },
+        "idris.autosave": {
+          "type": "string",
+          "enum": [
+            "always",
+            "prompt",
+            "never"
+          ],
+          "description": "Whether to save the current file before executing a command. Commands that read files operate on the state of that file on disk, so if it is not saved, the command might produce inaccurate output."
+        },
         "idris.hoverAction": {
           "type": "string",
           "enum": [

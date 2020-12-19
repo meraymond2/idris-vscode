@@ -29,21 +29,45 @@ const unimplementedV2 = (actionName: string): void => {
   return
 }
 
-const loadIfNot = (client: IdrisClient): Promise<void> => {
-  const doc = vscode.window.activeTextEditor?.document
-  return new Promise((res) => {
-    if (doc && doc.fileName !== state.currentFile) {
-      res(loadFile(client, doc))
+const autosave = async (doc: vscode.TextDocument) => {
+  if (doc.isDirty) {
+    switch (state.autosave) {
+      case "always": {
+        const saved = await doc.save()
+        if (!saved) vscode.window.showErrorMessage("Failed to save file.")
+        break
+      }
+      case "never":
+        break
+      case "prompt":
+        const shouldSave = await vscode.window.showQuickPick(["Save", "Cancel"])
+        if (shouldSave === "Save") {
+          const saved = await doc.save()
+          if (!saved) vscode.window.showErrorMessage("Failed to save file.")
+        }
+        break
     }
+  }
+}
+
+const ensureLoaded = (client: IdrisClient): Promise<void> =>
+  new Promise(async (res) => {
+    const doc = vscode.window.activeTextEditor?.document
+    if (doc) {
+      await autosave(doc)
+      if (doc && doc.fileName !== state.currentFile) {
+        res(loadFile(client, doc))
+      }
+    }
+
     res()
   })
-}
 
 export const addClause = (client: IdrisClient) => async () => {
   const selection = currentWord()
   if (selection) {
     const { name, line } = selection
-    await loadIfNot(client)
+    await ensureLoaded(client)
     const reply = await client.addClause(name, line + 1)
     if (reply.ok) {
       const insertAt = lineAfterDecl(line)
@@ -74,7 +98,7 @@ export const addMissing = (client: IdrisClient) => async () => {
   const selection = currentWord()
   if (selection) {
     const { name, line } = selection
-    await loadIfNot(client)
+    await ensureLoaded(client)
     const reply = await client.addMissing(name, line + 1)
     if (reply.ok) {
       const insertAt = lineAfterDecl(line)
@@ -138,7 +162,7 @@ export const caseSplit = (client: IdrisClient) => async () => {
   const selection = currentWord()
   if (selection) {
     const { name, line } = selection
-    await loadIfNot(client)
+    await ensureLoaded(client)
     const reply = await client.caseSplit(name, line + 1)
     if (reply.ok) {
       const caseStmt = reply.caseClause.trim()
@@ -184,7 +208,7 @@ export const docsForSelection = (client: IdrisClient) => async () => {
 }
 
 export const metavariables = (client: IdrisClient) => async () => {
-  await loadIfNot(client)
+  await ensureLoaded(client)
   const reply = await client.metavariables(80)
   const docInfo = stitchMetavariables(reply.metavariables)
   state.virtualDocState[reply.id] = docInfo
@@ -201,7 +225,7 @@ export const interpretSelection = (client: IdrisClient) => async () => {
   const selection = currentSelection()
   if (selection) {
     const { name, range } = selection
-    await loadIfNot(client)
+    await ensureLoaded(client)
     const reply = await client.interpret(name)
     if (reply.ok) {
       const opts: vscode.DecorationOptions = {
@@ -224,7 +248,7 @@ export const interpretSelection = (client: IdrisClient) => async () => {
 
 const displayPrintDefinition = async (client: IdrisClient, input: string) => {
   status("Getting definition for " + input + "...")
-  await loadIfNot(client)
+  await ensureLoaded(client)
   const reply = await client.printDefinition(input)
   if (reply.ok) {
     state.virtualDocState[reply.id] = {
@@ -274,7 +298,7 @@ export const makeCase = (client: IdrisClient) => async () => {
   const selection = currentWord()
   if (selection) {
     const { name, line } = selection
-    loadIfNot(client)
+    ensureLoaded(client)
     const reply = await client.makeCase(trimMeta(name), line + 1)
     const caseStmt = reply.caseClause.trim()
     if (caseStmt) {
@@ -294,7 +318,7 @@ export const makeLemma = (client: IdrisClient) => async () => {
   const selection = currentWord()
   if (selection) {
     const { name, line } = selection
-    await loadIfNot(client)
+    await ensureLoaded(client)
     const reply = await client.makeLemma(trimMeta(name), line + 1)
     if (reply.ok) {
       const editor = vscode.window.activeTextEditor
@@ -314,7 +338,7 @@ export const makeWith = (client: IdrisClient) => async () => {
   const selection = currentWord()
   if (selection) {
     const { name, line } = selection
-    await loadIfNot(client)
+    await ensureLoaded(client)
     const reply = await client.makeWith(name, line + 1)
     replaceLine(reply.withClause.trim(), line)
   }
@@ -325,7 +349,7 @@ export const proofSearch = (client: IdrisClient) => async () => {
   if (selection) {
     const { name, line } = selection
     status("Solving for " + name + "...")
-    await loadIfNot(client)
+    await ensureLoaded(client)
     const reply = await client.proofSearch(trimMeta(name), line + 1, [])
     if (reply.ok && reply.solution !== name) {
       replaceRange(reply.solution, selection.range)
