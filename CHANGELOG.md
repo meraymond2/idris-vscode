@@ -2,6 +2,7 @@
 ### Added
 ### Changed
 - Trim leading `?` so hover can show types of metavariables.
+- Bump client version to 0.1.4, which has better Idris 2 support.
 ### Fixed
 - Fix a bug where extension would prompt for reload on _any_ config change.
 
