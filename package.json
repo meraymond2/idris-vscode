@@ -2,8 +2,8 @@
   "name": "idris-vscode",
   "publisher": "meraymond",
   "displayName": "Idris Language",
-  "description": "Idris language support.",
-  "version": "0.0.6",
+  "description": "Language support for Idris and Idris 2.",
+  "version": "0.0.7",
   "license": "MIT",
   "repository": {
     "type": "git",
