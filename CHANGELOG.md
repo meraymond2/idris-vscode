@@ -5,6 +5,7 @@
 - Bump client version to 0.1.4, which has better Idris 2 support.
 ### Fixed
 - Fix a bug where extension would prompt for reload on _any_ config change.
+- Workaround a bug in Idris 2 where it would mangle messages based on a mis-inferred terminal width.
 
 ## 0.0.6
 ### Added
