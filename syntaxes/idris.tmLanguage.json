@@ -29,12 +29,7 @@
       "match": "(\\|\\|\\|).*$\n?",
       "comment": "Line comment"
     },
-    {
-      "name": "comment.block.idris",
-      "begin": "\\{-",
-      "end": "-\\}",
-      "comment": "Block comment"
-    },
+    { "include": "#multiline_comment" },
     {
       "begin": "\\b(module)\\b",
       "beginCaptures": {
@@ -73,6 +68,18 @@
     { "include": "#ty_expression" }
   ],
   "repository": {
+    "multiline_comment": {
+      "name": "comment.block.idris",
+      "begin": "\\{-",
+      "end": "-\\}",
+      "comment": "Block comment",
+      "patterns": [
+        {
+          "include": "#multiline_comment",
+          "name": "comment.block.idris"
+        }
+      ]
+    },
     "param_decl": {
       "name": "meta.declaration.data.idris",
       "begin": "\\b(parameters)\\s+(\\()",
