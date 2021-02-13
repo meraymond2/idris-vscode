@@ -123,6 +123,11 @@ The extension doesn’t set any key-bindings out of the box, but here are some s
     "when": "editorLangId == idris && editorTextFocus"
   },
   {
+    "key": "ctrl+alt+g",
+    "command": "idris.generateDef",
+    "when": "editorLangId == idris && editorTextFocus"
+  },
+  {
     "key": "ctrl+alt+i",
     "command": "idris.interpretSelection",
     "when": "editorLangId == idris && editorTextFocus"
