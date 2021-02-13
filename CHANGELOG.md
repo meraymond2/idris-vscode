@@ -1,6 +1,7 @@
 ## Unreleased
 ### Added
 ### Changed
+- Don't try to execute v2 commands if not in v2 mode, show warning instead.
 ### Fixed
 
 ## 0.0.8
