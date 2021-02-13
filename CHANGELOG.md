@@ -10,6 +10,7 @@
 ### Changed
 - Shorten Idris 2 error message to remove superfluous location information.
 ### Fixed
+- Fix syntax highlighting of nested block comments.
 
 ## 0.0.7
 ### Added
