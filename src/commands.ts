@@ -22,9 +22,9 @@ const trimMeta = (name: string) =>
 
 const status = (msg: string) => vscode.window.setStatusBarMessage(msg, 2000)
 
-const unimplementedV2 = (actionName: string): void => {
+export const v2Only = (actionName: string): void => {
   vscode.window.showWarningMessage(
-    actionName + " is not yet implemented for Idris 2."
+    actionName + " is only available in Idris 2."
   )
   return
 }
@@ -208,6 +208,8 @@ export const docsForSelection = (client: IdrisClient) => async () => {
 }
 
 export const generateDef = (client: IdrisClient) => async () => {
+  if (!state.idris2Mode) return v2Only("Generate Definition")
+
   const selection = currentWord()
   if (selection) {
     const { name, line } = selection
@@ -373,9 +375,8 @@ export const proofSearch = (client: IdrisClient) => async () => {
 }
 
 export const version = (client: IdrisClient) => async () => {
-  if (state.idris2Mode) return unimplementedV2("Version")
-
   const { major, minor, patch, tags } = await client.version()
+  const nonEmptyTags = tags.filter(Boolean)
   const msg =
     "Idris version is " +
     major +
@@ -383,6 +384,6 @@ export const version = (client: IdrisClient) => async () => {
     minor +
     "." +
     patch +
-    (tags.length ? "-" + tags.join("-") : "")
+    (nonEmptyTags.length ? "-" + nonEmptyTags.join("-") : "")
   vscode.window.showInformationMessage(msg)
 }
