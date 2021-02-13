@@ -1,10 +1,16 @@
 ## Unreleased
 ### Added
+### Changed
+### Fixed
+
+## 0.0.8
+### Added
 - Added :generate-def command.
 - Added :type-at as an option for hover behaviour.
 ### Changed
 - Shorten Idris 2 error message to remove superfluous location information.
 ### Fixed
+- Fix syntax highlighting of nested block comments.
 
 ## 0.0.7
 ### Added

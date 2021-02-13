@@ -19,6 +19,7 @@ Support for [Idris](https://www.idris-lang.org/), the dependently-typed, functio
   - [Case Split](#case-split)
   - [Documentation For](#documentation-for)
   - [Documentation At Cursor](#documentation-at-cursor)
+  - [Generate Definition](#generate-definition)
   - [Interpret Selection](#interpret-selection)
   - [List Metavariables](#list-metavariables)
   - [Print Definition](#print-definition)
@@ -70,6 +71,9 @@ Show the documentation for a given function.
 
 #### Documentation At Cursor
 Show the documentation for the function under the cursor.
+
+#### Generate Definition
+Generate complete definition for the function definition under the cursor.
 
 #### Interpret Selection
 Interpret the highlighted code and show the result in the editor.
