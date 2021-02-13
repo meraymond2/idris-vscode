@@ -207,6 +207,19 @@ export const docsForSelection = (client: IdrisClient) => async () => {
   if (selection) displayDocsFor(client, selection.name)
 }
 
+export const generateDef = (client: IdrisClient) => async () => {
+  const selection = currentWord()
+  if (selection) {
+    const { name, line } = selection
+    await ensureLoaded(client)
+    const reply = await client.generateDef(name, line + 1)
+    if (reply.ok) {
+      const insertAt = lineAfterDecl(line)
+      insertLine(reply.def, insertAt)
+    }
+  }
+}
+
 export const metavariables = (client: IdrisClient) => async () => {
   await ensureLoaded(client)
   const reply = await client.metavariables(80)

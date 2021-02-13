@@ -232,11 +232,59 @@ class DocStateParser {
   }
 }
 
+const typeOf = (client: IdrisClient) => (
+  document: vscode.TextDocument,
+  position: vscode.Position
+): Promise<string | null> =>
+  new Promise(async (res) => {
+    const range = document.getWordRangeAtPosition(position)
+    if (!range) res(null)
+
+    const parser = new DocStateParser(document.getText(), position)
+    const docStateAtPos = parser.parseToEndPos()
+    if (docStateAtPos !== "code") res(null)
+
+    const name = document.getText(range)
+    const trimmed = name.startsWith("?") ? name.slice(1, name.length) : name
+    const reply = await client.typeOf(trimmed)
+    res(reply.ok ? reply.typeOf : null)
+  })
+
+const typeAt = (client: IdrisClient) => (
+  document: vscode.TextDocument,
+  position: vscode.Position
+): Promise<string | null> =>
+  new Promise(async (res) => {
+    const range = document.getWordRangeAtPosition(position)
+    if (!range) res(null)
+
+    const parser = new DocStateParser(document.getText(), position)
+    const docStateAtPos = parser.parseToEndPos()
+    if (docStateAtPos !== "code") res(null)
+
+    const name = document.getText(range)
+    const trimmed = name.startsWith("?") ? name.slice(1, name.length) : name
+    const reply = await client.typeAt(
+      trimmed,
+      position.line + 1,
+      position.character + 1
+    )
+    res(reply.ok ? reply.typeAt : null)
+  })
+
 export class Provider implements vscode.HoverProvider {
-  private client: IdrisClient
+  private typeOf: (
+    document: vscode.TextDocument,
+    position: vscode.Position
+  ) => Promise<string | null>
+  private typeAt: (
+    document: vscode.TextDocument,
+    position: vscode.Position
+  ) => Promise<string | null>
 
   constructor(client: IdrisClient) {
-    this.client = client
+    this.typeOf = typeOf(client)
+    this.typeAt = typeAt(client)
   }
 
   provideHover(
@@ -248,25 +296,13 @@ export class Provider implements vscode.HoverProvider {
       case "Nothing":
         return null
       case "Type Of":
-        return new Promise(async (res) => {
-          const range = document.getWordRangeAtPosition(position)
-          if (!range) res(null)
-
-          const parser = new DocStateParser(document.getText(), position)
-          const docStateAtPos = parser.parseToEndPos()
-          if (docStateAtPos !== "code") res(null)
-
-          const name = document.getText(range)
-          const trimmed = name.startsWith("?")
-            ? name.slice(1, name.length)
-            : name
-          const reply = await this.client.typeOf(trimmed)
-          if (reply.ok) {
-            res({ contents: [{ value: reply.typeOf, language: "idris" }] })
-          } else {
-            res(null)
-          }
-        })
+        return this.typeOf(document, position).then((type) =>
+          type ? { contents: [{ value: type, language: "idris" }] } : null
+        )
+      case "Type At":
+        return this.typeAt(document, position).then((type) =>
+          type ? { contents: [{ value: type, language: "idris" }] } : null
+        )
     }
   }
 }

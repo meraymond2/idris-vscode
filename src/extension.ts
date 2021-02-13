@@ -9,6 +9,7 @@ import {
   docsFor,
   docsForSelection,
   evalResult,
+  generateDef,
   interpretSelection,
   loadFile,
   makeCase,
@@ -165,6 +166,10 @@ export const activate = (context: vscode.ExtensionContext) => {
       "idris.docsForSelection",
       docsForSelection(client)
     )
+  )
+
+  context.subscriptions.push(
+    vscode.commands.registerCommand("idris.generateDef", generateDef(client))
   )
 
   context.subscriptions.push(
