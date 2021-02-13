@@ -1,6 +1,7 @@
 import * as vscode from "vscode"
 import { IdrisClient } from "idris-ide-client"
 import { state } from "../state"
+import { v2Only } from "../commands"
 export const selector = { language: "idris" }
 
 type DocState =
@@ -300,6 +301,10 @@ export class Provider implements vscode.HoverProvider {
           type ? { contents: [{ value: type, language: "idris" }] } : null
         )
       case "Type At":
+        if (!state.idris2Mode) {
+          v2Only("Type At")
+          return null
+        }
         return this.typeAt(document, position).then((type) =>
           type ? { contents: [{ value: type, language: "idris" }] } : null
         )
