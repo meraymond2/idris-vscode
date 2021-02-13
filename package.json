@@ -54,6 +54,10 @@
         "title": "Idris: Documentation At Cursor"
       },
       {
+        "command": "idris.generateDef",
+        "title": "Idris: Generate Definition"
+      },
+      {
         "command": "idris.interpretSelection",
         "title": "Idris: Interpret Selection"
       },
@@ -116,10 +120,12 @@
           "type": "string",
           "enum": [
             "Type Of",
+            "Type At",
             "Nothing"
           ],
           "enumDescriptions": [
             "Get the type of the current variable. Not context aware, so will be incorrect for local variables.",
+            "Get the type of the current variable. More accurate than Type Of, but Idris 2 only.",
             "Disable hover behaviour."
           ],
           "default": "Type Of",
@@ -186,7 +192,7 @@
     "lint": "tsc --noEmit && prettier --check --write 'src/**/*.ts' && eslint src --ext .ts --fix"
   },
   "dependencies": {
-    "idris-ide-client": "0.1.4"
+    "idris-ide-client": "0.1.5"
   },
   "devDependencies": {
     "@types/node": "^13.13.36",

@@ -7,7 +7,7 @@ import { VirtualDocInfo } from "./providers/virtual-docs"
 // I’m not using the Memento API because I don’t want persistence across sessions, and I do want type-safety.
 
 export type AutoSaveBehaviour = "always" | "prompt" | "never"
-export type HoverBehaviour = "Type Of" | "Nothing"
+export type HoverBehaviour = "Type Of" | "Type At" | "Nothing"
 
 export interface State {
   autosave: AutoSaveBehaviour
