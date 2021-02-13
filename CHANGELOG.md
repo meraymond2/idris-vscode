@@ -1,5 +1,10 @@
 ## Unreleased
 ### Added
+### Changed
+### Fixed
+
+## 0.0.8
+### Added
 - Added :generate-def command.
 - Added :type-at as an option for hover behaviour.
 ### Changed
