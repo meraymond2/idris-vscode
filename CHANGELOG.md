@@ -3,6 +3,7 @@
 - Added :generate-def command.
 - Added :type-at as an option for hover behaviour.
 ### Changed
+- Shorten Idris 2 error message to remove superfluous location information.
 ### Fixed
 
 ## 0.0.7

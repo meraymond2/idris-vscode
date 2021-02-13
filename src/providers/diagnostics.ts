@@ -2,6 +2,7 @@ import * as vscode from "vscode"
 import { InfoReply } from "idris-ide-client"
 import { state } from "../state"
 import { isAbsolute } from "path"
+import { rmLocDesc } from "./diagnostic-utils"
 
 const warningToDiagnostic = (reply: InfoReply.Warning): vscode.Diagnostic => {
   const { start, end, warning } = reply.err
@@ -9,7 +10,8 @@ const warningToDiagnostic = (reply: InfoReply.Warning): vscode.Diagnostic => {
     new vscode.Position(start.line - 1, start.column - 1),
     new vscode.Position(end.line - 1, end.column)
   )
-  return new vscode.Diagnostic(range, warning)
+  const editedWarning = rmLocDesc(warning)
+  return new vscode.Diagnostic(range, editedWarning)
 }
 
 export const handleWarning = (reply: InfoReply.Warning): void => {

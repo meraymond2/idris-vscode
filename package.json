@@ -189,19 +189,25 @@
     "vscode:prepublish": "npm run compile",
     "compile": "tsc -p ./",
     "watch": "tsc -watch -p ./",
-    "lint": "tsc --noEmit && prettier --check --write 'src/**/*.ts' && eslint src --ext .ts --fix"
+    "lint": "tsc --noEmit && prettier --check --write 'src/**/*.ts' && eslint src --ext .ts --fix",
+    "test": "NODE_ENV=test npx mocha --recursive --require ts-node/register --extensions ts 'test/**/*.ts'"
   },
   "dependencies": {
-    "idris-ide-client": "0.1.5"
+    "idris-ide-client": "^0.1.5"
   },
   "devDependencies": {
-    "@types/node": "^13.13.36",
+    "@types/chai": "^4.2.15",
+    "@types/mocha": "8.2.0",
+    "@types/node": "^13.13.41",
     "@types/vscode": "^1.44.0",
     "@typescript-eslint/eslint-plugin": "^2.34.0",
     "@typescript-eslint/parser": "^2.34.0",
-    "eslint": "^6.8.0",
+    "chai": "4.2.0",
+    "eslint": "7.19.0",
+    "mocha": "8.2.1",
     "prettier": "^2.2.1",
-    "typescript": "^3.9.7",
+    "ts-node": "9.1.1",
+    "typescript": "^3.9.9",
     "vsce": "1.76.0"
   }
 }
