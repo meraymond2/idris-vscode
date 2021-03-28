@@ -2,6 +2,7 @@
 ### Added
 ### Changed
 - Don't try to execute v2 commands if not in v2 mode, show warning instead.
+- Stop passing console width flag to Idris 2 proc, as no longer needed.
 ### Fixed
 - Fix bug where VS couldn't insert past end of document.
 - Change the function_signature highlighting rule to add fewer scopes, fixing the highlighting of case statements within the signature.
