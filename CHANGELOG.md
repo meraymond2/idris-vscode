@@ -3,6 +3,7 @@
 ### Changed
 - Don't try to execute v2 commands if not in v2 mode, show warning instead.
 ### Fixed
+- Fix bug where VS couldn't insert past end of document.
 
 ## 0.0.8
 ### Added
