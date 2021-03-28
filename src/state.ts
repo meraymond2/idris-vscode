@@ -67,7 +67,7 @@ export const initialiseState = () => {
   in parent directories of the process, so it’s also necessary to start the Idris
   process in the workspace directory.*/
   const procArgs = idris2Mode
-    ? ["--ide-mode", "--find-ipkg", "--console-width", "0"]
+    ? ["--ide-mode", "--find-ipkg"]
     : ["--ide-mode"]
   const procOpts = idrisProcDir ? { cwd: idrisProcDir } : {}
   const idrisProc = spawn(idrisPath, procArgs, procOpts)
