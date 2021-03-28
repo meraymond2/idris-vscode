@@ -51,6 +51,10 @@ export const lineAfterDecl = (declLine: number): number => {
     nextLineNumber < document.lineCount + 1;
     nextLineNumber++
   ) {
+    if (nextLineNumber === document.lineCount) {
+      insertAtLine = nextLineNumber
+      break
+    }
     const nextLine = document.lineAt(nextLineNumber)
     const hasIndentedText = /^\s+\S+/.test(nextLine.text)
     if (!hasIndentedText) {
@@ -104,7 +108,11 @@ export const insertLine = (
   const editor = vscode.window.activeTextEditor
   editor?.edit((eb) => {
     const pos = new vscode.Position(line, column)
-    eb.insert(pos, text + "\n")
+    // If you try to insert past the end of the file, it will simply append it
+    // to the final line, so in that case start with a newline.
+    const prefix = line === editor.document.lineCount ? "\n" : ""
+    const suffix = "\n"
+    eb.insert(pos, prefix + text + suffix)
   })
 }
 
