@@ -2,7 +2,7 @@
 
 Support for [Idris](https://www.idris-lang.org/), the dependently-typed, functional language.
 
-- [Requirements](#requirements)
+- [Installation](#installation)
 - [Idris 2](#idris-2)
 - [Commands](#commands)
   - [Code Navigation](#code-navigation)
@@ -31,18 +31,24 @@ Support for [Idris](https://www.idris-lang.org/), the dependently-typed, functio
   - [Version](#version)
 - [Keybindings](#keybindings)
 - [Semantic Highlighting](#semantic-highlighting)
-- [Status](#status)
 - [To Do](#todo)
+- [About](#about)
 - [License](#license)
 
-## Requirements
+## Installation
 
-You’ll need Idris installed. If it’s not on your $PATH, you can specify the path to the executable in the config.
+The plugin itself can be installed from within VSCode or VSCodium through the Extensions Panel. It should come up if you search for ‘Idris’. The extension id is `meraymond.idris-vscode`.
+
+You can also download the vsix file from the [Releases page](https://github.com/meraymond2/idris-vscode/releases) on Github, or from the [VSCode Marketplace](https://marketplace.visualstudio.com/items?itemName=meraymond.idris-vscode), or from the [Open VSX Registry](https://open-vsx.org/extension/meraymond/idris-vscode).
+
+You will need Idris or Idris 2 installed separately. If it’s not on your $PATH, you can specify the absolute path to the executable in the config. The extension will not download or install anything on the user’s behalf.
+
+If you want to test local changes to the extension, build it with `npm install && npm run watch`, then you can launch the local version with Run > Start Debugging inside VS.
 
 ## Idris 2
 Currently the extension will default to v1. If you want it to use Idris 2, change the path in the configuration to your Idris 2 binary, and tick the `Idris 2 Mode` checkbox.
 
-Only the current version of Idris 2 is supported, which at the moment is 0.2.1. If you experience problems, please make sure you are using the most recent version.
+Only the current version of Idris 2 is supported, which at the moment is 0.3.0. If you experience problems, please make sure you are using the most recent version.
 
 At the moment, some of the IDE commands haven’t been implemented in Idris 2. There are no completions yet either.
 
@@ -162,18 +168,20 @@ The extension doesn’t set any key-bindings out of the box, but here are some s
 ## Semantic Highlighting
 The apropos, browse namespace, documentation and definition commands use VS’s semantic highlighting API to colourise their output. If you don’t see any highlighting, it’s likely that your theme doesn’t support it yet.
 
-Currently, Idris source files _don’t_ use semantic highlighting. There are a few issues to work out to get it to sync with Idris in a non-terrible way.
-
-## Status
-Under active development. Should be mostly working, but there are still features to do.
-
-If you run into any problems, please raise an issue, or raise a PR if you want to.
+Currently, Idris source files _don’t_ use semantic highlighting. There are a few issues to work out to get it to sync with Idris in a non-terrible way. Also Idris 2 does not yet return the metadata required for semantic highlighting.
 
 ## To Do
 - implement Show References
 - there is more information to add to the metavariables command output
 - semantic highlighting for source code
 - more ipkg integration
+
+## About
+The extension should be mostly stable for Idris 1, though there a few remaining unimplemented actions. Current work is focused on fixing bugs and maintaining support for Idris 2.
+
+If you run into any problems, please raise an issue, or raise a PR if you want to.
+
+There is not, nor will there ever be, telemetry in this extension (though that may not apply to VS itself).
 
 ## Acknowledgments
 The syntax files are adapted from [vscode-idris’s](https://github.com/zjhmale/vscode-idris) port of the [Atom plugin’s](https://github.com/idris-hackers/atom-language-idris) grammars.
