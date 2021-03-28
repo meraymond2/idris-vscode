@@ -1,6 +1,11 @@
 ## Unreleased
 ### Added
 ### Changed
+### Fixed
+
+## 0.0.9
+### Added
+### Changed
 - Don't try to execute v2 commands if not in v2 mode, show warning instead.
 - Stop passing console width flag to Idris 2 proc, as no longer needed.
 ### Fixed
