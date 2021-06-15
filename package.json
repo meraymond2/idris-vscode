@@ -16,7 +16,8 @@
     "Programming Languages"
   ],
   "activationEvents": [
-    "onLanguage:idris"
+    "onLanguage:idris",
+    "onLanguage:lidr"
   ],
   "main": "./out/extension.js",
   "contributes": {
@@ -189,7 +190,7 @@
     "vscode:prepublish": "npm run compile",
     "compile": "tsc -p ./",
     "watch": "tsc -watch -p ./",
-    "lint": "tsc --noEmit && prettier --fix --write 'src/**/*.ts' && eslint src --ext .ts --fix",
+    "lint": "tsc --noEmit && prettier --write 'src/**/*.ts' && eslint src --ext .ts --fix",
     "test": "NODE_ENV=test npx mocha --recursive --require ts-node/register --extensions ts 'test/**/*.ts'"
   },
   "dependencies": {

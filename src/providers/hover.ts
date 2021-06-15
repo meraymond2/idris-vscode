@@ -2,7 +2,7 @@ import * as vscode from "vscode"
 import { IdrisClient } from "idris-ide-client"
 import { state } from "../state"
 import { v2Only } from "../commands"
-export const selector = { language: "idris" }
+export const selector = [{ language: "idris" }, { language: "lidr" }]
 
 type DocState =
   | "code" // abc
@@ -215,16 +215,24 @@ class DocStateParser {
   }
 }
 
+const overCode = (document: vscode.TextDocument, position: vscode.Position): boolean => {
+  if (document.languageId === "idris") {
+    const parser = new DocStateParser(document.getText(), position)
+    const docStateAtPos = parser.parseToEndPos()
+    return docStateAtPos === "code"
+  } else if (document.languageId === "lidr") {
+    return document.lineAt(position.line).text.startsWith(">")
+  }
+  return false
+}
+
 const typeOf =
   (client: IdrisClient) =>
   (document: vscode.TextDocument, position: vscode.Position): Promise<string | null> =>
     new Promise(async (res) => {
       const range = document.getWordRangeAtPosition(position)
       if (!range) res(null)
-
-      const parser = new DocStateParser(document.getText(), position)
-      const docStateAtPos = parser.parseToEndPos()
-      if (docStateAtPos !== "code") res(null)
+      if (!overCode(document, position)) res(null)
 
       const name = document.getText(range)
       const trimmed = name.startsWith("?") ? name.slice(1, name.length) : name
@@ -238,10 +246,7 @@ const typeAt =
     new Promise(async (res) => {
       const range = document.getWordRangeAtPosition(position)
       if (!range) res(null)
-
-      const parser = new DocStateParser(document.getText(), position)
-      const docStateAtPos = parser.parseToEndPos()
-      if (docStateAtPos !== "code") res(null)
+      if (!overCode(document, position)) res(null)
 
       const name = document.getText(range)
       const trimmed = name.startsWith("?") ? name.slice(1, name.length) : name
