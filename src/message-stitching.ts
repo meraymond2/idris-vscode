@@ -15,10 +15,7 @@ interface Decl {
  * It does require iterating over all of the metadata twice, but it means I
  * can reuse `metadataToTokens` on the result, instead of writing new functions.
  */
-export const stitchBrowseNamespace = (
-  subModules: string[],
-  decls: Decl[]
-): VirtualDocInfo => {
+export const stitchBrowseNamespace = (subModules: string[], decls: Decl[]): VirtualDocInfo => {
   // Sub-modules don’t come with metadata, but I want them highlighted as namespaces.
   const initial: {
     offset: number
@@ -72,9 +69,7 @@ export const stitchBrowseNamespace = (
  *
  * TODO: add the scope vars to the output.
  */
-export const stitchMetavariables = (
-  metavars: Metavariable[]
-): VirtualDocInfo => {
+export const stitchMetavariables = (metavars: Metavariable[]): VirtualDocInfo => {
   const initial: {
     offset: number
     docText: string

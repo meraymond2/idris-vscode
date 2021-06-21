@@ -46,11 +46,7 @@ export const lineAfterDecl = (declLine: number): number => {
   const document = editor?.document
   if (!document) return defaultTo
   let insertAtLine
-  for (
-    let nextLineNumber = declLine + 1;
-    nextLineNumber < document.lineCount + 1;
-    nextLineNumber++
-  ) {
+  for (let nextLineNumber = declLine + 1; nextLineNumber < document.lineCount + 1; nextLineNumber++) {
     if (nextLineNumber === document.lineCount) {
       insertAtLine = nextLineNumber
       break
@@ -100,11 +96,7 @@ export const getIndent = (line: number): string => {
 /**
  * Insert `text` at the specified line and number, along with a new line.
  */
-export const insertLine = (
-  text: string,
-  line: number,
-  column: number = 0
-): void => {
+export const insertLine = (text: string, line: number, column: number = 0): void => {
   const editor = vscode.window.activeTextEditor
   editor?.edit((eb) => {
     const pos = new vscode.Position(line, column)

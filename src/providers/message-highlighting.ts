@@ -26,15 +26,7 @@ const flattenToken = (token: VSToken): number[] => [
   token.tokenModifiers,
 ]
 
-const tokenTypes = [
-  "enum",
-  "function",
-  "macro",
-  "namespace",
-  "type",
-  "variable",
-  "variable.readonly",
-]
+const tokenTypes = ["enum", "function", "macro", "namespace", "type", "variable", "variable.readonly"]
 
 const tokenModifiers = ["declaration"]
 
@@ -54,10 +46,7 @@ const decorToSelectorIndex = {
  * to the previous token, by line and char. This function converts from the
  * Idris system to VS.
  */
-export const metadataToTokens = (
-  text: string,
-  metadata: MessageMetadata[]
-): Uint32Array => {
+export const metadataToTokens = (text: string, metadata: MessageMetadata[]): Uint32Array => {
   let tokenData: number[] = []
   let pos = 0
   let line = 0
@@ -108,15 +97,10 @@ export const metadataToTokens = (
   return new Uint32Array(tokenData)
 }
 
-export const legend = new vscode.SemanticTokensLegend(
-  tokenTypes,
-  tokenModifiers
-)
+export const legend = new vscode.SemanticTokensLegend(tokenTypes, tokenModifiers)
 
 export const provider: vscode.DocumentSemanticTokensProvider = {
-  provideDocumentSemanticTokens(
-    document: vscode.TextDocument
-  ): vscode.ProviderResult<vscode.SemanticTokens> {
+  provideDocumentSemanticTokens(document: vscode.TextDocument): vscode.ProviderResult<vscode.SemanticTokens> {
     const info = state.virtualDocState[document.uri.path]
     return new Promise((resolve) => {
       if (info) {

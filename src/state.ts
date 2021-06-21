@@ -47,16 +47,10 @@ export const initialiseState = () => {
   const extensionConfig = vscode.workspace.getConfiguration("idris")
   const idrisPath: string = extensionConfig.get("idrisPath") || ""
   const idris2Mode: boolean = extensionConfig.get("idris2Mode") || false
-  const autosave: AutoSaveBehaviour | undefined = extensionConfig.get(
-    "autosave"
-  )
-  const hoverAction: HoverBehaviour | undefined = extensionConfig.get(
-    "hoverAction"
-  )
+  const autosave: AutoSaveBehaviour | undefined = extensionConfig.get("autosave")
+  const hoverAction: HoverBehaviour | undefined = extensionConfig.get("hoverAction")
 
-  const workspacePaths = vscode.workspace.workspaceFolders?.map(
-    (folder) => folder.uri.path
-  )
+  const workspacePaths = vscode.workspace.workspaceFolders?.map((folder) => folder.uri.path)
   let idrisProcDir = null
   if (idris2Mode && workspacePaths?.length === 1) {
     idrisProcDir = workspacePaths[0]
@@ -66,16 +60,12 @@ export const initialiseState = () => {
   directory, so it’s necessary to pass the --find-ipkg flag. It looks for the ipkg
   in parent directories of the process, so it’s also necessary to start the Idris
   process in the workspace directory.*/
-  const procArgs = idris2Mode
-    ? ["--ide-mode", "--find-ipkg"]
-    : ["--ide-mode"]
+  const procArgs = idris2Mode ? ["--ide-mode", "--find-ipkg"] : ["--ide-mode"]
   const procOpts = idrisProcDir ? { cwd: idrisProcDir } : {}
   const idrisProc = spawn(idrisPath, procArgs, procOpts)
 
   idrisProc.on("error", (_) => {
-    vscode.window.showErrorMessage(
-      "Could not start Idris process with: " + idrisPath
-    )
+    vscode.window.showErrorMessage("Could not start Idris process with: " + idrisPath)
   })
 
   if (!(idrisProc.stdin && idrisProc.stdout)) {
