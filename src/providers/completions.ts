@@ -38,11 +38,7 @@ export class Provider implements vscode.CompletionItemProvider {
     return new Promise(async (res) => {
       const reply = await this.client.replCompletions(name)
       const completions = reply.completions.map(
-        (completion) =>
-          new vscode.CompletionItem(
-            completion,
-            vscode.CompletionItemKind.Function
-          )
+        (completion) => new vscode.CompletionItem(completion, vscode.CompletionItemKind.Function)
       )
       res(completions)
     })

@@ -26,21 +26,13 @@ import * as completions from "./providers/completions"
 import * as hover from "./providers/hover"
 import * as messageHighlighting from "./providers/message-highlighting"
 import * as virtualDocs from "./providers/virtual-docs"
-import {
-  AutoSaveBehaviour,
-  HoverBehaviour,
-  initialiseState,
-  state,
-} from "./state"
+import { AutoSaveBehaviour, HoverBehaviour, initialiseState, state } from "./state"
 
 const promptReload = () => {
   const action = "Reload Now"
 
   vscode.window
-    .showInformationMessage(
-      "Reload window in order for configuration changes to take effect.",
-      action
-    )
+    .showInformationMessage("Reload window in order for configuration changes to take effect.", action)
     .then((selectedAction) => {
       if (selectedAction === action) {
         vscode.commands.executeCommand("workbench.action.reloadWindow")
@@ -55,37 +47,23 @@ export const activate = (context: vscode.ExtensionContext) => {
     throw "Client should have been initialised by this point."
   }
 
-  vscode.workspace.onDidChangeConfiguration(
-    (changeEvent: vscode.ConfigurationChangeEvent) => {
-      if (changeEvent.affectsConfiguration("idris.autosave")) {
-        const autosave:
-          | AutoSaveBehaviour
-          | undefined = vscode.workspace
-          .getConfiguration("idris")
-          .get("autosave")
-        if (autosave) state.autosave = autosave
-      }
-      if (changeEvent.affectsConfiguration("idris.hoverAction")) {
-        const hoverAction:
-          | HoverBehaviour
-          | undefined = vscode.workspace
-          .getConfiguration("idris")
-          .get("hoverAction")
-        if (hoverAction) state.hoverAction = hoverAction
-      }
-      const procConfigChanged =
-        changeEvent.affectsConfiguration("idris.idrisPath") ||
-        changeEvent.affectsConfiguration("idris.idris2Mode")
-      if (procConfigChanged) {
-        promptReload()
-      }
+  vscode.workspace.onDidChangeConfiguration((changeEvent: vscode.ConfigurationChangeEvent) => {
+    if (changeEvent.affectsConfiguration("idris.autosave")) {
+      const autosave: AutoSaveBehaviour | undefined = vscode.workspace.getConfiguration("idris").get("autosave")
+      if (autosave) state.autosave = autosave
     }
-  )
+    if (changeEvent.affectsConfiguration("idris.hoverAction")) {
+      const hoverAction: HoverBehaviour | undefined = vscode.workspace.getConfiguration("idris").get("hoverAction")
+      if (hoverAction) state.hoverAction = hoverAction
+    }
+    const procConfigChanged =
+      changeEvent.affectsConfiguration("idris.idrisPath") || changeEvent.affectsConfiguration("idris.idris2Mode")
+    if (procConfigChanged) {
+      promptReload()
+    }
+  })
 
-  vscode.workspace.registerTextDocumentContentProvider(
-    virtualDocs.scheme,
-    virtualDocs.provider
-  )
+  vscode.workspace.registerTextDocumentContentProvider(virtualDocs.scheme, virtualDocs.provider)
 
   vscode.languages.registerDocumentSemanticTokensProvider(
     messageHighlighting.selector,
@@ -93,19 +71,11 @@ export const activate = (context: vscode.ExtensionContext) => {
     messageHighlighting.legend
   )
 
-  vscode.languages.registerCompletionItemProvider(
-    completions.selector,
-    new completions.Provider(client)
-  )
+  vscode.languages.registerCompletionItemProvider(completions.selector, new completions.Provider(client))
 
-  vscode.languages.registerHoverProvider(
-    hover.selector,
-    new hover.Provider(client)
-  )
+  vscode.languages.registerHoverProvider(hover.selector, new hover.Provider(client))
 
-  vscode.window.visibleTextEditors.forEach((editor) =>
-    loadFile(client, editor.document)
-  )
+  vscode.window.visibleTextEditors.forEach((editor) => loadFile(client, editor.document))
 
   /* Hooks */
   const syncFileInfo = (document: vscode.TextDocument) => {
@@ -127,98 +97,43 @@ export const activate = (context: vscode.ExtensionContext) => {
   })
 
   /* Commands */
-  context.subscriptions.push(
-    vscode.commands.registerCommand("idris.addClause", addClause(client))
-  )
+  context.subscriptions.push(vscode.commands.registerCommand("idris.addClause", addClause(client)))
+
+  context.subscriptions.push(vscode.commands.registerCommand("idris.addMissing", addMissing(client)))
+
+  context.subscriptions.push(vscode.commands.registerCommand("idris.apropos", apropos(client)))
+
+  context.subscriptions.push(vscode.commands.registerCommand("idris.aproposSelection", aproposSelection(client)))
+
+  context.subscriptions.push(vscode.commands.registerCommand("idris.browseNamespace", browseNamespace(client)))
+
+  context.subscriptions.push(vscode.commands.registerCommand("idris.caseSplit", caseSplit(client)))
+
+  context.subscriptions.push(vscode.commands.registerCommand("idris.docsFor", docsFor(client)))
+
+  context.subscriptions.push(vscode.commands.registerCommand("idris.docsForSelection", docsForSelection(client)))
+
+  context.subscriptions.push(vscode.commands.registerCommand("idris.generateDef", generateDef(client)))
+
+  context.subscriptions.push(vscode.commands.registerCommand("idris.interpretSelection", interpretSelection(client)))
+
+  context.subscriptions.push(vscode.commands.registerCommand("idris.metavariables", metavariables(client)))
+
+  context.subscriptions.push(vscode.commands.registerCommand("idris.printDefinition", printDefinition(client)))
 
   context.subscriptions.push(
-    vscode.commands.registerCommand("idris.addMissing", addMissing(client))
+    vscode.commands.registerCommand("idris.printDefinitionSelection", printDefinitionSelection(client))
   )
 
-  context.subscriptions.push(
-    vscode.commands.registerCommand("idris.apropos", apropos(client))
-  )
+  context.subscriptions.push(vscode.commands.registerCommand("idris.makeCase", makeCase(client)))
 
-  context.subscriptions.push(
-    vscode.commands.registerCommand(
-      "idris.aproposSelection",
-      aproposSelection(client)
-    )
-  )
+  context.subscriptions.push(vscode.commands.registerCommand("idris.makeLemma", makeLemma(client)))
 
-  context.subscriptions.push(
-    vscode.commands.registerCommand(
-      "idris.browseNamespace",
-      browseNamespace(client)
-    )
-  )
+  context.subscriptions.push(vscode.commands.registerCommand("idris.makeWith", makeWith(client)))
 
-  context.subscriptions.push(
-    vscode.commands.registerCommand("idris.caseSplit", caseSplit(client))
-  )
+  context.subscriptions.push(vscode.commands.registerCommand("idris.proofSearch", proofSearch(client)))
 
-  context.subscriptions.push(
-    vscode.commands.registerCommand("idris.docsFor", docsFor(client))
-  )
-
-  context.subscriptions.push(
-    vscode.commands.registerCommand(
-      "idris.docsForSelection",
-      docsForSelection(client)
-    )
-  )
-
-  context.subscriptions.push(
-    vscode.commands.registerCommand("idris.generateDef", generateDef(client))
-  )
-
-  context.subscriptions.push(
-    vscode.commands.registerCommand(
-      "idris.interpretSelection",
-      interpretSelection(client)
-    )
-  )
-
-  context.subscriptions.push(
-    vscode.commands.registerCommand(
-      "idris.metavariables",
-      metavariables(client)
-    )
-  )
-
-  context.subscriptions.push(
-    vscode.commands.registerCommand(
-      "idris.printDefinition",
-      printDefinition(client)
-    )
-  )
-
-  context.subscriptions.push(
-    vscode.commands.registerCommand(
-      "idris.printDefinitionSelection",
-      printDefinitionSelection(client)
-    )
-  )
-
-  context.subscriptions.push(
-    vscode.commands.registerCommand("idris.makeCase", makeCase(client))
-  )
-
-  context.subscriptions.push(
-    vscode.commands.registerCommand("idris.makeLemma", makeLemma(client))
-  )
-
-  context.subscriptions.push(
-    vscode.commands.registerCommand("idris.makeWith", makeWith(client))
-  )
-
-  context.subscriptions.push(
-    vscode.commands.registerCommand("idris.proofSearch", proofSearch(client))
-  )
-
-  context.subscriptions.push(
-    vscode.commands.registerCommand("idris.version", version(client))
-  )
+  context.subscriptions.push(vscode.commands.registerCommand("idris.version", version(client)))
 }
 
 export const deactivate = () => {

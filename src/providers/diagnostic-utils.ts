@@ -5,5 +5,4 @@ const rmFileSec = (warning: string) => warning.replace(filenameRegex, "")
 
 const rmParseLine = (warning: string) => warning.replace(parseLineRegex, "")
 
-export const rmLocDesc = (warning: string) =>
-  rmFileSec(rmParseLine(warning)).trim()
+export const rmLocDesc = (warning: string) => rmFileSec(rmParseLine(warning)).trim()

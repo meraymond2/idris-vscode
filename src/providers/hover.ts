@@ -106,11 +106,7 @@ class DocStateParser {
   consumeNextDelim(): Delimiter | null {
     switch (this.state) {
       case "code": {
-        if (
-          this.text[this.pos] === '"' &&
-          this.text[this.pos + 1] === '"' &&
-          this.text[this.pos + 2] === '"'
-        ) {
+        if (this.text[this.pos] === '"' && this.text[this.pos + 1] === '"' && this.text[this.pos + 2] === '"') {
           this.pos += 3
           this.col += 3
           return "multi-line-string-delim"
@@ -118,25 +114,15 @@ class DocStateParser {
           this.pos += 1
           this.col += 1
           return "string-delim"
-        } else if (
-          this.text[this.pos] === "-" &&
-          this.text[this.pos + 1] === "-"
-        ) {
+        } else if (this.text[this.pos] === "-" && this.text[this.pos + 1] === "-") {
           this.pos += 2
           this.col += 2
           return "start-line-comment"
-        } else if (
-          this.text[this.pos] === "{" &&
-          this.text[this.pos + 1] === "-"
-        ) {
+        } else if (this.text[this.pos] === "{" && this.text[this.pos + 1] === "-") {
           this.pos += 2
           this.col += 2
           return "start-block-comment"
-        } else if (
-          this.text[this.pos] === "|" &&
-          this.text[this.pos + 1] === "|" &&
-          this.text[this.pos + 2] === "|"
-        ) {
+        } else if (this.text[this.pos] === "|" && this.text[this.pos + 1] === "|" && this.text[this.pos + 2] === "|") {
           this.pos += 3
           this.col += 3
           return "start-doc-comment"
@@ -187,11 +173,7 @@ class DocStateParser {
         }
       }
       case "multi-line-string": {
-        if (
-          this.text[this.pos] === '"' &&
-          this.text[this.pos + 1] === '"' &&
-          this.text[this.pos + 2] === '"'
-        ) {
+        if (this.text[this.pos] === '"' && this.text[this.pos + 1] === '"' && this.text[this.pos + 2] === '"') {
           let escapes = 0
           while (this.text[this.pos - (1 + escapes)] === "\\") {
             escapes += 1
@@ -233,55 +215,43 @@ class DocStateParser {
   }
 }
 
-const typeOf = (client: IdrisClient) => (
-  document: vscode.TextDocument,
-  position: vscode.Position
-): Promise<string | null> =>
-  new Promise(async (res) => {
-    const range = document.getWordRangeAtPosition(position)
-    if (!range) res(null)
+const typeOf =
+  (client: IdrisClient) =>
+  (document: vscode.TextDocument, position: vscode.Position): Promise<string | null> =>
+    new Promise(async (res) => {
+      const range = document.getWordRangeAtPosition(position)
+      if (!range) res(null)
 
-    const parser = new DocStateParser(document.getText(), position)
-    const docStateAtPos = parser.parseToEndPos()
-    if (docStateAtPos !== "code") res(null)
+      const parser = new DocStateParser(document.getText(), position)
+      const docStateAtPos = parser.parseToEndPos()
+      if (docStateAtPos !== "code") res(null)
 
-    const name = document.getText(range)
-    const trimmed = name.startsWith("?") ? name.slice(1, name.length) : name
-    const reply = await client.typeOf(trimmed)
-    res(reply.ok ? reply.typeOf : null)
-  })
+      const name = document.getText(range)
+      const trimmed = name.startsWith("?") ? name.slice(1, name.length) : name
+      const reply = await client.typeOf(trimmed)
+      res(reply.ok ? reply.typeOf : null)
+    })
 
-const typeAt = (client: IdrisClient) => (
-  document: vscode.TextDocument,
-  position: vscode.Position
-): Promise<string | null> =>
-  new Promise(async (res) => {
-    const range = document.getWordRangeAtPosition(position)
-    if (!range) res(null)
+const typeAt =
+  (client: IdrisClient) =>
+  (document: vscode.TextDocument, position: vscode.Position): Promise<string | null> =>
+    new Promise(async (res) => {
+      const range = document.getWordRangeAtPosition(position)
+      if (!range) res(null)
 
-    const parser = new DocStateParser(document.getText(), position)
-    const docStateAtPos = parser.parseToEndPos()
-    if (docStateAtPos !== "code") res(null)
+      const parser = new DocStateParser(document.getText(), position)
+      const docStateAtPos = parser.parseToEndPos()
+      if (docStateAtPos !== "code") res(null)
 
-    const name = document.getText(range)
-    const trimmed = name.startsWith("?") ? name.slice(1, name.length) : name
-    const reply = await client.typeAt(
-      trimmed,
-      position.line + 1,
-      position.character + 1
-    )
-    res(reply.ok ? reply.typeAt : null)
-  })
+      const name = document.getText(range)
+      const trimmed = name.startsWith("?") ? name.slice(1, name.length) : name
+      const reply = await client.typeAt(trimmed, position.line + 1, position.character + 1)
+      res(reply.ok ? reply.typeAt : null)
+    })
 
 export class Provider implements vscode.HoverProvider {
-  private typeOf: (
-    document: vscode.TextDocument,
-    position: vscode.Position
-  ) => Promise<string | null>
-  private typeAt: (
-    document: vscode.TextDocument,
-    position: vscode.Position
-  ) => Promise<string | null>
+  private typeOf: (document: vscode.TextDocument, position: vscode.Position) => Promise<string | null>
+  private typeAt: (document: vscode.TextDocument, position: vscode.Position) => Promise<string | null>
 
   constructor(client: IdrisClient) {
     this.typeOf = typeOf(client)

@@ -17,15 +17,12 @@ import { state } from "./state"
  * Many of the calls that accept the name of a metavariable don’t expect the
  * name to begin with the leading ?, so it has to be removed first.
  */
-const trimMeta = (name: string) =>
-  name.startsWith("?") ? name.slice(1, name.length) : name
+const trimMeta = (name: string) => (name.startsWith("?") ? name.slice(1, name.length) : name)
 
 const status = (msg: string) => vscode.window.setStatusBarMessage(msg, 2000)
 
 export const v2Only = (actionName: string): void => {
-  vscode.window.showWarningMessage(
-    actionName + " is only available in Idris 2."
-  )
+  vscode.window.showWarningMessage(actionName + " is only available in Idris 2.")
   return
 }
 
@@ -107,10 +104,7 @@ export const addMissing = (client: IdrisClient) => async () => {
   }
 }
 
-const displayApropos = async (
-  client: IdrisClient,
-  input: string
-): Promise<void> => {
+const displayApropos = async (client: IdrisClient, input: string): Promise<void> => {
   status("Searching for documentation that includes " + input + "...")
   const reply = await client.apropos(input)
   if (reply.ok) {
@@ -144,10 +138,7 @@ export const browseNamespace = (client: IdrisClient) => async () => {
   if (input) {
     const reply = await client.browseNamespace(input)
     if (reply.ok) {
-      const docInfo = stitchBrowseNamespace(
-        reply.subModules,
-        reply.declarations
-      )
+      const docInfo = stitchBrowseNamespace(reply.subModules, reply.declarations)
       state.virtualDocState[reply.id] = docInfo
       const uri = vscode.Uri.parse("idris:" + reply.id)
       const doc = await vscode.workspace.openTextDocument(uri)
@@ -289,10 +280,7 @@ export const printDefinitionSelection = (client: IdrisClient) => async () => {
   if (selection) displayPrintDefinition(client, selection.name)
 }
 
-export const loadFile = async (
-  client: IdrisClient,
-  document: vscode.TextDocument
-): Promise<void> => {
+export const loadFile = async (client: IdrisClient, document: vscode.TextDocument): Promise<void> => {
   if (state.statusMessage) state.statusMessage.dispose()
 
   if (document.languageId === "idris") {
@@ -378,12 +366,6 @@ export const version = (client: IdrisClient) => async () => {
   const { major, minor, patch, tags } = await client.version()
   const nonEmptyTags = tags.filter(Boolean)
   const msg =
-    "Idris version is " +
-    major +
-    "." +
-    minor +
-    "." +
-    patch +
-    (nonEmptyTags.length ? "-" + nonEmptyTags.join("-") : "")
+    "Idris version is " + major + "." + minor + "." + patch + (nonEmptyTags.length ? "-" + nonEmptyTags.join("-") : "")
   vscode.window.showInformationMessage(msg)
 }
