@@ -60,7 +60,7 @@ export const initialiseState = () => {
   directory, so it’s necessary to pass the --find-ipkg flag. It looks for the ipkg
   in parent directories of the process, so it’s also necessary to start the Idris
   process in the workspace directory.*/
-  const procArgs = idris2Mode ? ["--ide-mode", "--find-ipkg"] : ["--ide-mode"]
+  const procArgs = idris2Mode ? ["--ide-mode", "--find-ipkg", "--no-color"] : ["--ide-mode"]
   const procOpts = idrisProcDir ? { cwd: idrisProcDir } : {}
   const idrisProc = spawn(idrisPath, procArgs, procOpts)
 
