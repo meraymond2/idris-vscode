@@ -2,7 +2,7 @@ import * as vscode from "vscode"
 import { IdrisClient } from "idris-ide-client"
 import { state } from "../state"
 import { v2Only } from "../commands"
-export const selector = { language: "idris" }
+export const selector = [{ language: "idris" }, { language: "lidr" }]
 
 type DocState =
   | "code" // abc
@@ -215,16 +215,41 @@ class DocStateParser {
   }
 }
 
+const lidrLineIsCode = (document: vscode.TextDocument, line: number): boolean =>
+  document.lineAt(line).text.trim().startsWith(">")
+
+const overCode = (document: vscode.TextDocument, position: vscode.Position): boolean => {
+  if (document.languageId === "idris") {
+    const parser = new DocStateParser(document.getText(), position)
+    const docStateAtPos = parser.parseToEndPos()
+    return docStateAtPos === "code"
+  } else if (document.languageId === "lidr") {
+    const inCodeBlock = lidrLineIsCode(document, position.line)
+    if (!inCodeBlock) return false
+
+    // Run the DocStateParser on just the code block that the hover position is within.
+    let blockStartLine = position.line
+    let blockEndLine = position.line
+    while (lidrLineIsCode(document, blockStartLine)) blockStartLine--
+    while (lidrLineIsCode(document, blockEndLine)) blockEndLine++
+    const blockStart = new vscode.Position(blockStartLine, 0)
+    const blockEnd = new vscode.Position(blockEndLine + 1, 0)
+    const block = new vscode.Range(blockStart, blockEnd)
+    const relativePos = new vscode.Position(position.line - blockStartLine, position.character)
+    const parser = new DocStateParser(document.getText(block), relativePos)
+    const docStateAtPos = parser.parseToEndPos()
+    return docStateAtPos === "code"
+  }
+  return false
+}
+
 const typeOf =
   (client: IdrisClient) =>
   (document: vscode.TextDocument, position: vscode.Position): Promise<string | null> =>
     new Promise(async (res) => {
       const range = document.getWordRangeAtPosition(position)
       if (!range) res(null)
-
-      const parser = new DocStateParser(document.getText(), position)
-      const docStateAtPos = parser.parseToEndPos()
-      if (docStateAtPos !== "code") res(null)
+      if (!overCode(document, position)) res(null)
 
       const name = document.getText(range)
       const trimmed = name.startsWith("?") ? name.slice(1, name.length) : name
@@ -238,10 +263,7 @@ const typeAt =
     new Promise(async (res) => {
       const range = document.getWordRangeAtPosition(position)
       if (!range) res(null)
-
-      const parser = new DocStateParser(document.getText(), position)
-      const docStateAtPos = parser.parseToEndPos()
-      if (docStateAtPos !== "code") res(null)
+      if (!overCode(document, position)) res(null)
 
       const name = document.getText(range)
       const trimmed = name.startsWith("?") ? name.slice(1, name.length) : name
