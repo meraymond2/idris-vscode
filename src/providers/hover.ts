@@ -215,13 +215,30 @@ class DocStateParser {
   }
 }
 
+const lidrLineIsCode = (document: vscode.TextDocument, line: number): boolean =>
+  document.lineAt(line).text.trim().startsWith(">")
+
 const overCode = (document: vscode.TextDocument, position: vscode.Position): boolean => {
   if (document.languageId === "idris") {
     const parser = new DocStateParser(document.getText(), position)
     const docStateAtPos = parser.parseToEndPos()
     return docStateAtPos === "code"
   } else if (document.languageId === "lidr") {
-    return document.lineAt(position.line).text.startsWith(">")
+    const inCodeBlock = lidrLineIsCode(document, position.line)
+    if (!inCodeBlock) return false
+
+    // Run the DocStateParser on just the code block that the hover position is within.
+    let blockStartLine = position.line
+    let blockEndLine = position.line
+    while (lidrLineIsCode(document, blockStartLine)) blockStartLine--
+    while (lidrLineIsCode(document, blockEndLine)) blockEndLine++
+    const blockStart = new vscode.Position(blockStartLine, 0)
+    const blockEnd = new vscode.Position(blockEndLine + 1, 0)
+    const block = new vscode.Range(blockStart, blockEnd)
+    const relativePos = new vscode.Position(position.line - blockStartLine, position.character)
+    const parser = new DocStateParser(document.getText(block), relativePos)
+    const docStateAtPos = parser.parseToEndPos()
+    return docStateAtPos === "code"
   }
   return false
 }
