@@ -53,7 +53,7 @@ const ensureLoaded = (client: IdrisClient): Promise<void> =>
     if (doc) {
       await autosave(doc)
       if (doc && doc.fileName !== state.currentFile) {
-        res(loadFile(client, doc))
+        return res(loadFile(client, doc))
       }
     }
 
