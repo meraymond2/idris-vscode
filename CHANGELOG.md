@@ -1,7 +1,9 @@
 ## Unreleased
 ### Added
+- Hover support for .lidr files.
 ### Changed
 ### Fixed
+- Fixed a bug where hover would send erroneous typecheck requests that weren't displayed, but slowed down the process.
 
 ## 0.0.9
 ### Added
