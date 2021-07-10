@@ -1,6 +1,6 @@
 ## Unreleased
 ### Added
-- Hover support for .lidr files.
+- Adds more ide support for .lidr files, mainly hover and diagnostics, and some commands.
 ### Changed
 ### Fixed
 - Fixed a bug where hover would send erroneous typecheck requests that weren't displayed, but slowed down the process.
