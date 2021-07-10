@@ -64,7 +64,7 @@ export const lineAfterDecl = (declLine: number): number => {
 /**
  * Get the first empty line above the current line.
  */
-export const prevEmptyLine = (fromLine: number): number => {
+export const prevEmptyLine = (fromLine: number, languageId: string): number => {
   const defaultTo = fromLine - 1
   const editor = vscode.window.activeTextEditor
   const document = editor?.document
@@ -72,7 +72,8 @@ export const prevEmptyLine = (fromLine: number): number => {
   let insertAtLine
   for (let line = fromLine - 1; line > 0; line--) {
     const prevLine = document.lineAt(line)
-    if (prevLine.isEmptyOrWhitespace) {
+    const isEmptyLine = languageId === "lidr" ? /^>\s*$/.test(prevLine.text) : prevLine.isEmptyOrWhitespace
+    if (isEmptyLine) {
       insertAtLine = line
       break
     }

@@ -336,8 +336,10 @@ export const makeLemma = (client: IdrisClient) => async () => {
       const editor = vscode.window.activeTextEditor
       editor?.edit((eb) => {
         // when making multiple changes, they need to use the same edit-builder
-        const declPos = new vscode.Position(prevEmptyLine(line), 0)
-        eb.insert(declPos, "\n" + reply.declaration + "\n")
+        const docLang = editor.document.languageId
+        const declPos = new vscode.Position(prevEmptyLine(line, docLang), 0)
+        const newline = docLang === "lidr" ? "> \n" : "\n"
+        eb.insert(declPos, newline + reply.declaration + "\n")
         eb.replace(selection.range, reply.metavariable)
       })
     } else {
