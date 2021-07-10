@@ -197,18 +197,18 @@
     "idris-ide-client": "^0.1.5"
   },
   "devDependencies": {
-    "@types/chai": "^4.2.19",
-    "@types/mocha": "8.2.0",
-    "@types/node": "^13.13.52",
+    "@types/chai": "4.2.21",
+    "@types/mocha": "8.2.3",
+    "@types/node": "14.17.2",
     "@types/vscode": "^1.44.0",
-    "@typescript-eslint/eslint-plugin": "^2.34.0",
-    "@typescript-eslint/parser": "^2.34.0",
-    "chai": "4.2.0",
-    "eslint": "7.19.0",
-    "mocha": "8.2.1",
-    "prettier": "^2.3.1",
-    "ts-node": "9.1.1",
-    "typescript": "^3.9.10",
-    "vsce": "1.76.0"
+    "@typescript-eslint/eslint-plugin": "4.28.2",
+    "@typescript-eslint/parser": "4.28.2",
+    "chai": "4.3.4",
+    "eslint": "7.30.0",
+    "mocha": "9.0.2",
+    "prettier": "2.3.2",
+    "ts-node": "10.1.0",
+    "typescript": "4.3.5",
+    "vsce": "1.95.1"
   }
 }
