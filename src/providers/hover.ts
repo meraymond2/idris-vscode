@@ -230,8 +230,8 @@ const overCode = (document: vscode.TextDocument, position: vscode.Position): boo
     // Run the DocStateParser on just the code block that the hover position is within.
     let blockStartLine = position.line
     let blockEndLine = position.line
-    while (lidrLineIsCode(document, blockStartLine)) blockStartLine--
-    while (lidrLineIsCode(document, blockEndLine)) blockEndLine++
+    while (lidrLineIsCode(document, blockStartLine) && blockStartLine > 0) blockStartLine--
+    while (lidrLineIsCode(document, blockEndLine) && blockEndLine <= document.lineCount) blockEndLine++
     const blockStart = new vscode.Position(blockStartLine, 0)
     const blockEnd = new vscode.Position(blockEndLine + 1, 0)
     const block = new vscode.Range(blockStart, blockEnd)

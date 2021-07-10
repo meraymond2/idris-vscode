@@ -283,7 +283,7 @@ export const printDefinitionSelection = (client: IdrisClient) => async () => {
 export const loadFile = async (client: IdrisClient, document: vscode.TextDocument): Promise<void> => {
   if (state.statusMessage) state.statusMessage.dispose()
 
-  if (document.languageId === "idris") {
+  if (document.languageId === "idris" || document.languageId === "lidr") {
     const reply = await client.loadFile(document.fileName)
     if (reply.ok) {
       state.currentFile = document.fileName
@@ -297,13 +297,34 @@ export const loadFile = async (client: IdrisClient, document: vscode.TextDocumen
   }
 }
 
+// Some lidr replies have duplicated `> `s, mixed up with whitespace. Sigh.
+const fixLidrPrefix = (s: string): string => {
+  if (s.startsWith("> > ")) {
+    const fixed = s.replace(/^(> )+/, "")
+    const indentDiff = s.length - fixed.length
+    return s
+      .split("\n")
+      .map((line) => {
+        const sliced = line.slice(indentDiff, line.length)
+        const extraArrows = sliced.match(/^(> )+/)
+        if (extraArrows) {
+          const [matched] = extraArrows
+          return "> " + " ".repeat(matched.length) + sliced.slice(matched.length, sliced.length)
+        } else {
+          return "> " + sliced
+        }
+      })
+      .join("\n")
+  } else return s
+}
+
 export const makeCase = (client: IdrisClient) => async () => {
   const selection = currentWord()
   if (selection) {
     const { name, line } = selection
     ensureLoaded(client)
     const reply = await client.makeCase(trimMeta(name), line + 1)
-    const caseStmt = reply.caseClause.trim()
+    const caseStmt = fixLidrPrefix(reply.caseClause.trim())
     if (caseStmt) {
       // The reply doesn’t preserve indentation, so if we’re replacing the whole
       // line, we want to first re-add the original indentation. Adding the
@@ -327,8 +348,10 @@ export const makeLemma = (client: IdrisClient) => async () => {
       const editor = vscode.window.activeTextEditor
       editor?.edit((eb) => {
         // when making multiple changes, they need to use the same edit-builder
-        const declPos = new vscode.Position(prevEmptyLine(line), 0)
-        eb.insert(declPos, "\n" + reply.declaration + "\n")
+        const docLang = editor.document.languageId
+        const declPos = new vscode.Position(prevEmptyLine(line, docLang), 0)
+        const newline = docLang === "lidr" ? "> \n" : "\n"
+        eb.insert(declPos, newline + reply.declaration + "\n")
         eb.replace(selection.range, reply.metavariable)
       })
     } else {
@@ -343,7 +366,7 @@ export const makeWith = (client: IdrisClient) => async () => {
     const { name, line } = selection
     await ensureLoaded(client)
     const reply = await client.makeWith(name, line + 1)
-    replaceLine(reply.withClause.trim(), line)
+    replaceLine(fixLidrPrefix(reply.withClause.trim()), line)
   }
 }
 

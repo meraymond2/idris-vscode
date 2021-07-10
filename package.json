@@ -163,6 +163,7 @@
           "Literate Idris",
           "literate idris"
         ],
+        "configuration": "./language-configuration.json",
         "extensions": [
           ".lidr"
         ]
