@@ -248,8 +248,8 @@ const typeOf =
   (document: vscode.TextDocument, position: vscode.Position): Promise<string | null> =>
     new Promise(async (res) => {
       const range = document.getWordRangeAtPosition(position)
-      if (!range) res(null)
-      if (!overCode(document, position)) res(null)
+      if (!range) return res(null)
+      if (!overCode(document, position)) return res(null)
 
       const name = document.getText(range)
       const trimmed = name.startsWith("?") ? name.slice(1, name.length) : name
@@ -262,8 +262,8 @@ const typeAt =
   (document: vscode.TextDocument, position: vscode.Position): Promise<string | null> =>
     new Promise(async (res) => {
       const range = document.getWordRangeAtPosition(position)
-      if (!range) res(null)
-      if (!overCode(document, position)) res(null)
+      if (!range) return res(null)
+      if (!overCode(document, position)) return res(null)
 
       const name = document.getText(range)
       const trimmed = name.startsWith("?") ? name.slice(1, name.length) : name
