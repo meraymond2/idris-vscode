@@ -297,14 +297,26 @@ export const loadFile = async (client: IdrisClient, document: vscode.TextDocumen
   }
 }
 
-// Some lidr replies have duplicated `> `s.
-const fixLidrPrefix = (s: string): string =>
-  s.startsWith("> > ")
-    ? s
-        .split("\n")
-        .map((line) => "> " + line.slice(4, line.length))
-        .join("\n")
-    : s
+// Some lidr replies have duplicated `> `s, mixed up with whitespace. Sigh.
+const fixLidrPrefix = (s: string): string => {
+  if (s.startsWith("> > ")) {
+    const fixed = s.replace(/^(> )+/, "")
+    const indentDiff = s.length - fixed.length
+    return s
+      .split("\n")
+      .map((line) => {
+        const sliced = line.slice(indentDiff, line.length)
+        const extraArrows = sliced.match(/^(> )+/)
+        if (extraArrows) {
+          const [matched] = extraArrows
+          return "> " + " ".repeat(matched.length) + sliced.slice(matched.length, sliced.length)
+        } else {
+          return "> " + sliced
+        }
+      })
+      .join("\n")
+  } else return s
+}
 
 export const makeCase = (client: IdrisClient) => async () => {
   const selection = currentWord()
@@ -354,7 +366,7 @@ export const makeWith = (client: IdrisClient) => async () => {
     const { name, line } = selection
     await ensureLoaded(client)
     const reply = await client.makeWith(name, line + 1)
-    replaceLine(reply.withClause.trim(), line)
+    replaceLine(fixLidrPrefix(reply.withClause.trim()), line)
   }
 }
 
