@@ -297,13 +297,22 @@ export const loadFile = async (client: IdrisClient, document: vscode.TextDocumen
   }
 }
 
+// Some lidr replies have duplicated `> `s.
+const fixLidrPrefix = (s: string): string =>
+  s.startsWith("> > ")
+    ? s
+        .split("\n")
+        .map((line) => "> " + line.slice(4, line.length))
+        .join("\n")
+    : s
+
 export const makeCase = (client: IdrisClient) => async () => {
   const selection = currentWord()
   if (selection) {
     const { name, line } = selection
     ensureLoaded(client)
     const reply = await client.makeCase(trimMeta(name), line + 1)
-    const caseStmt = reply.caseClause.trim()
+    const caseStmt = fixLidrPrefix(reply.caseClause.trim())
     if (caseStmt) {
       // The reply doesn’t preserve indentation, so if we’re replacing the whole
       // line, we want to first re-add the original indentation. Adding the
