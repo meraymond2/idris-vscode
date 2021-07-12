@@ -159,9 +159,8 @@
       {
         "id": "lidr",
         "aliases": [
-          "lidr",
           "Literate Idris",
-          "literate idris"
+          "lidr"
         ],
         "configuration": "./language-configuration.json",
         "extensions": [
