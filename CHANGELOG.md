@@ -1,7 +1,13 @@
 ## Unreleased
 ### Added
-- Adds more ide support for .lidr files, mainly hover and diagnostics, and some commands.
 ### Changed
+### Fixed
+
+## 0.0.10
+### Added
+- Adds more ide support for .lidr files: hover, diagnostics and most commands.
+### Changed
+- Updated the IDE process args to handle Idris2 0.4.0, specifically fixes it so it doesn't spew ansi colour codes everywhere.
 ### Fixed
 - Fixed a bug where hover would send erroneous typecheck requests that weren't displayed, but slowed down the process.
 
