@@ -298,6 +298,9 @@ export const loadFile = async (client: IdrisClient, document: vscode.TextDocumen
 }
 
 // Some lidr replies have duplicated `> `s, mixed up with whitespace. Sigh.
+// See https://github.com/meraymond2/idris-ide-client/blob/main/test/client/v2-lidr.test.ts
+// for examples of the malformed resposnes.
+// TODO: This works, but I think it can be simplified considerably, and could use units tests.
 const fixLidrPrefix = (s: string): string => {
   if (s.startsWith("> > ")) {
     const fixed = s.replace(/^(> )+/, "")
