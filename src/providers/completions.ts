@@ -62,5 +62,3 @@ export class Provider implements vscode.CompletionItemProvider {
     })
   }
 }
-
-export const selector = { language: "idris" }

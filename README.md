@@ -48,7 +48,7 @@ If you want to test local changes to the extension, build it with `npm install &
 ## Idris 2
 Currently the extension will default to v1. If you want it to use Idris 2, change the path in the configuration to your Idris 2 binary, and tick the `Idris 2 Mode` checkbox.
 
-Only the current version of Idris 2 is supported, which at the moment is 0.3.0. If you experience problems, please make sure you are using the most recent version.
+Only the current version of Idris 2 is supported, which at the moment is 0.4.0. If you experience problems, please make sure you are using the most recent version.
 
 At the moment, some of the IDE commands haven’t been implemented in Idris 2. There are no completions yet either.
 
@@ -164,6 +164,11 @@ The extension doesn’t set any key-bindings out of the box, but here are some s
   }
 ]
 ```
+
+## Literate Idris
+The extension should work equally well for literate Idris files. For [Idris 1](https://docs.idris-lang.org/en/latest/tutorial/miscellany.html#literate-programming), this only applies to .lidr files. [Idris 2](https://idris2.readthedocs.io/en/latest/reference/literate.html) extends this this to embedded code blocks in Markdown, LaTeX and Org-Mode files. However, the extension will only activate automatically for `.idr` and `.lidr` files. In order to use it for other file types, it may need be activated manually, with the `Idris: Activate Extension` command, if you have not previously opened any Idris files.
+
+LaTeX and Org-Mode are not yet implemented, but Markdown support is.
 
 ## Semantic Highlighting
 The apropos, browse namespace, documentation and definition commands use VS’s semantic highlighting API to colourise their output. If you don’t see any highlighting, it’s likely that your theme doesn’t support it yet.

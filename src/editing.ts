@@ -6,6 +6,14 @@ interface Term {
   range: vscode.Range
 }
 
+const previousChar = (document: vscode.TextDocument, range: vscode.Range): string =>
+  document.getText(
+    new vscode.Range(
+      new vscode.Position(range.start.line, range.start.character - 1),
+      new vscode.Position(range.start.line, range.start.character)
+    )
+  )
+
 /**
  * Get the term under the cursor.
  */
@@ -17,6 +25,14 @@ export const currentWord = (): Term | null => {
 
   const range = document?.getWordRangeAtPosition(position)
   if (!range) return null
+
+  // If the selection is embedded within a Markdown file, the word boundaries
+  // won’t include preceding ?s, which is a problem when selecting holes.
+  if (document.languageId === "markdown" && previousChar(document, range) === "?") {
+    const extendedRange = range.with(range.start.with(range.start.line, range.start.character - 1), range.end)
+    const name = document.getText(extendedRange)
+    return { name, line: position.line, range: extendedRange }
+  }
 
   const name = document.getText(range)
   return { name, line: position.line, range }

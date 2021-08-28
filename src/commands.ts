@@ -11,7 +11,8 @@ import {
   currentSelection,
 } from "./editing"
 import { stitchBrowseNamespace, stitchMetavariables } from "./message-stitching"
-import { state } from "./state"
+import { state, supportedLanguages } from "./state"
+import { isExtLanguage } from "./languages"
 
 /**
  * Many of the calls that accept the name of a metavariable don’t expect the
@@ -283,7 +284,7 @@ export const printDefinitionSelection = (client: IdrisClient) => async () => {
 export const loadFile = async (client: IdrisClient, document: vscode.TextDocument): Promise<void> => {
   if (state.statusMessage) state.statusMessage.dispose()
 
-  if (document.languageId === "idris" || document.languageId === "lidr") {
+  if (isExtLanguage(document.languageId) && supportedLanguages(state).includes(document.languageId)) {
     const reply = await client.loadFile(document.fileName)
     if (reply.ok) {
       state.currentFile = document.fileName
@@ -298,6 +299,9 @@ export const loadFile = async (client: IdrisClient, document: vscode.TextDocumen
 }
 
 // Some lidr replies have duplicated `> `s, mixed up with whitespace. Sigh.
+// See https://github.com/meraymond2/idris-ide-client/blob/main/test/client/v2-lidr.test.ts
+// for examples of the malformed resposnes.
+// TODO: This works, but I think it can be simplified considerably, and could use units tests.
 const fixLidrPrefix = (s: string): string => {
   if (s.startsWith("> > ")) {
     const fixed = s.replace(/^(> )+/, "")
