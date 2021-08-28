@@ -12,6 +12,7 @@ import {
 } from "./editing"
 import { stitchBrowseNamespace, stitchMetavariables } from "./message-stitching"
 import { state, supportedLanguages } from "./state"
+import { isExtLanguage } from "./languages"
 
 /**
  * Many of the calls that accept the name of a metavariable don’t expect the
@@ -283,7 +284,7 @@ export const printDefinitionSelection = (client: IdrisClient) => async () => {
 export const loadFile = async (client: IdrisClient, document: vscode.TextDocument): Promise<void> => {
   if (state.statusMessage) state.statusMessage.dispose()
 
-  if (supportedLanguages(state).includes(document.languageId)) {
+  if (isExtLanguage(document.languageId) && supportedLanguages(state).includes(document.languageId)) {
     const reply = await client.loadFile(document.fileName)
     if (reply.ok) {
       state.currentFile = document.fileName
