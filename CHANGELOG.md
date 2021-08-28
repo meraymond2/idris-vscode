@@ -1,5 +1,6 @@
 ## Unreleased
 ### Added
+- Syntax highlighting for idris/idris2 code blocks in markdown files.
 ### Changed
 ### Fixed
 

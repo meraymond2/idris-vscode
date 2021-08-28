@@ -1,6 +1,5 @@
-{ nixpkgs ? import <nixpkgs> {} }:
+with (import <unstable> {});
 
-with nixpkgs;
 mkShell {
   name = "idris-plugin";
   buildInputs = [
