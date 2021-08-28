@@ -41,6 +41,7 @@ const promptReload = () => {
 }
 
 export const activate = (context: vscode.ExtensionContext) => {
+  vscode.window.showInformationMessage("ACTIVATION!!!!!")
   initialiseState()
   const { client, diagnostics, virtualDocState } = state
   if (client === null) {
@@ -97,6 +98,8 @@ export const activate = (context: vscode.ExtensionContext) => {
   })
 
   /* Commands */
+  context.subscriptions.push(vscode.commands.registerCommand("idris.activate", () => {}))
+
   context.subscriptions.push(vscode.commands.registerCommand("idris.addClause", addClause(client)))
 
   context.subscriptions.push(vscode.commands.registerCommand("idris.addMissing", addMissing(client)))

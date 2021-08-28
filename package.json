@@ -17,11 +17,16 @@
   ],
   "activationEvents": [
     "onLanguage:idris",
-    "onLanguage:lidr"
+    "onLanguage:lidr",
+    "onCommand:idris.activate"
   ],
   "main": "./out/extension.js",
   "contributes": {
     "commands": [
+      {
+        "command": "idris.activate",
+        "title": "Idris: Activate Extension"
+      },
       {
         "command": "idris.addClause",
         "title": "Idris: Add Clause"

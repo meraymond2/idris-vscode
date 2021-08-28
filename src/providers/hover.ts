@@ -2,7 +2,7 @@ import * as vscode from "vscode"
 import { IdrisClient } from "idris-ide-client"
 import { state } from "../state"
 import { v2Only } from "../commands"
-export const selector = [{ language: "idris" }, { language: "lidr" }]
+export const selector = [{ language: "idris" }, { language: "lidr" }, { language: "markdown" }]
 
 type DocState =
   | "code" // abc
@@ -285,6 +285,7 @@ export class Provider implements vscode.HoverProvider {
     position: vscode.Position,
     _token: vscode.CancellationToken
   ): vscode.ProviderResult<vscode.Hover> {
+    if (document.languageId === "markdown") return { contents: [{ value: "Lunabee", language: "idris" }] }
     switch (state.hoverAction) {
       case "Nothing":
         return null
