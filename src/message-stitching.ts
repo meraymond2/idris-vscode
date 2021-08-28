@@ -64,7 +64,7 @@ export const stitchBrowseNamespace = (subModules: string[], decls: Decl[]): Virt
  * The metavariables reply has a list of metavars, each with a list of other
  * vars that are in its scope. The metavar and each of the other vars have their
  * own metadata. In order to put these into a single document, with correctly
- * relative tokens, We stitch all of the text into a single document
+ * relative tokens, we stitch all of the text into a single document
  * (string), with adjusted metadata positions.
  *
  * TODO: add the scope vars to the output.

@@ -26,7 +26,7 @@ import * as completions from "./providers/completions"
 import * as hover from "./providers/hover"
 import * as messageHighlighting from "./providers/message-highlighting"
 import * as virtualDocs from "./providers/virtual-docs"
-import { AutoSaveBehaviour, HoverBehaviour, initialiseState, state } from "./state"
+import { AutoSaveBehaviour, HoverBehaviour, initialiseState, state, supportedLanguages } from "./state"
 
 const promptReload = () => {
   const action = "Reload Now"
@@ -41,12 +41,14 @@ const promptReload = () => {
 }
 
 export const activate = (context: vscode.ExtensionContext) => {
-  vscode.window.showInformationMessage("ACTIVATION!!!!!")
   initialiseState()
   const { client, diagnostics, virtualDocState } = state
   if (client === null) {
     throw "Client should have been initialised by this point."
   }
+
+  // Activate the provider for all supported language ids.
+  const selectSupported = supportedLanguages(state).map((language) => ({ language }))
 
   vscode.workspace.onDidChangeConfiguration((changeEvent: vscode.ConfigurationChangeEvent) => {
     if (changeEvent.affectsConfiguration("idris.autosave")) {
@@ -72,9 +74,9 @@ export const activate = (context: vscode.ExtensionContext) => {
     messageHighlighting.legend
   )
 
-  vscode.languages.registerCompletionItemProvider(completions.selector, new completions.Provider(client))
+  vscode.languages.registerCompletionItemProvider(selectSupported, new completions.Provider(client))
 
-  vscode.languages.registerHoverProvider(hover.selector, new hover.Provider(client))
+  vscode.languages.registerHoverProvider(selectSupported, new hover.Provider(client))
 
   vscode.window.visibleTextEditors.forEach((editor) => loadFile(client, editor.document))
 

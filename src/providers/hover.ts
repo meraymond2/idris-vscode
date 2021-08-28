@@ -2,7 +2,6 @@ import * as vscode from "vscode"
 import { IdrisClient } from "idris-ide-client"
 import { state } from "../state"
 import { v2Only } from "../commands"
-export const selector = [{ language: "idris" }, { language: "lidr" }, { language: "markdown" }]
 
 type DocState =
   | "code" // abc

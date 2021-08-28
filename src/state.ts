@@ -1,6 +1,7 @@
 import { ChildProcess, spawn } from "child_process"
 import { IdrisClient, Reply } from "idris-ide-client"
 import * as vscode from "vscode"
+import { Lanuage } from "./languages"
 import { handleWarning } from "./providers/diagnostics"
 import { VirtualDocInfo } from "./providers/virtual-docs"
 
@@ -84,3 +85,6 @@ export const initialiseState = () => {
   if (autosave) state.autosave = autosave
   if (hoverAction) state.hoverAction = hoverAction
 }
+
+export const supportedLanguages = (state: State): Lanuage[] =>
+  state.idris2Mode ? ["idris", "lidr", "markdown"] : ["idris", "lidr"]
