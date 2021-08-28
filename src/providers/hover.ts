@@ -239,6 +239,8 @@ const overCode = (document: vscode.TextDocument, position: vscode.Position): boo
     const parser = new DocStateParser(document.getText(block), relativePos)
     const docStateAtPos = parser.parseToEndPos()
     return docStateAtPos === "code"
+  } else if (document.languageId === "markdown") {
+    return true // TODO!
   }
   return false
 }
@@ -285,7 +287,6 @@ export class Provider implements vscode.HoverProvider {
     position: vscode.Position,
     _token: vscode.CancellationToken
   ): vscode.ProviderResult<vscode.Hover> {
-    if (document.languageId === "markdown") return { contents: [{ value: "Lunabee", language: "idris" }] }
     switch (state.hoverAction) {
       case "Nothing":
         return null

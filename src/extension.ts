@@ -98,7 +98,11 @@ export const activate = (context: vscode.ExtensionContext) => {
   })
 
   /* Commands */
-  context.subscriptions.push(vscode.commands.registerCommand("idris.activate", () => {}))
+  context.subscriptions.push(
+    vscode.commands.registerCommand("idris.activate", () => {
+      if (vscode.window.activeTextEditor) syncFileInfo(vscode.window.activeTextEditor.document)
+    })
+  )
 
   context.subscriptions.push(vscode.commands.registerCommand("idris.addClause", addClause(client)))
 

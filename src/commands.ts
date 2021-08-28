@@ -283,7 +283,7 @@ export const printDefinitionSelection = (client: IdrisClient) => async () => {
 export const loadFile = async (client: IdrisClient, document: vscode.TextDocument): Promise<void> => {
   if (state.statusMessage) state.statusMessage.dispose()
 
-  if (document.languageId === "idris" || document.languageId === "lidr") {
+  if (document.languageId === "idris" || document.languageId === "lidr" || document.languageId === "markdown") {
     const reply = await client.loadFile(document.fileName)
     if (reply.ok) {
       state.currentFile = document.fileName
