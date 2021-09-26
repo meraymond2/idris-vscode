@@ -40,8 +40,8 @@ const promptReload = () => {
     })
 }
 
-export const activate = (context: vscode.ExtensionContext) => {
-  initialiseState()
+export const activate = async (context: vscode.ExtensionContext) => {
+  await initialiseState()
   const { client, diagnostics, virtualDocState } = state
   if (client === null) {
     throw "Client should have been initialised by this point."
