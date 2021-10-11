@@ -4,6 +4,7 @@ import * as vscode from "vscode"
 import { ExtLanguage } from "./languages"
 import { handleWarning } from "./providers/diagnostics"
 import { VirtualDocInfo } from "./providers/virtual-docs"
+import { loadIpkgFile, extractPkgs } from "./ipkg"
 
 // I’m not using the Memento API because I don’t want persistence across sessions, and I do want type-safety.
 
@@ -44,7 +45,7 @@ const replyCallback = (reply: Reply): void => {
   }
 }
 
-export const initialiseState = () => {
+export const initialiseState = async () => {
   const extensionConfig = vscode.workspace.getConfiguration("idris")
   const idrisPath: string = extensionConfig.get("idrisPath") || ""
   const idris2Mode: boolean = extensionConfig.get("idris2Mode") || false
@@ -62,6 +63,17 @@ export const initialiseState = () => {
   in parent directories of the process, so it’s also necessary to start the Idris
   process in the workspace directory.*/
   const procArgs = idris2Mode ? ["--ide-mode", "--find-ipkg", "--no-color"] : ["--ide-mode"]
+
+  if (!idris2Mode) {
+    const ipkgUries = await vscode.workspace.findFiles("*.ipkg")
+
+    if (ipkgUries.length > 0) {
+      const ipkgFile = await loadIpkgFile(ipkgUries[0])
+      const pkgs = extractPkgs(ipkgFile)
+      pkgs.forEach(pkg => procArgs.push("-p", pkg))
+    }
+  }
+
   const procOpts = idrisProcDir ? { cwd: idrisProcDir } : {}
   const idrisProc = spawn(idrisPath, procArgs, procOpts)
 
