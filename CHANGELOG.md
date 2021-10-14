@@ -1,10 +1,14 @@
 ## Unreleased
 ### Added
+### Changed
+### Fixed
+
+## 0.0.11
+### Added
 - Syntax highlighting for idris/idris2 code blocks in markdown files.
 - `Idris: Activate Extension` command, to manually activate when working with non-idris files.
 - Support for commands in idris2 blocks in markdown files.
 - Load packages from .ipkg file in Idris 1.
-
 ### Changed
 ### Fixed
 - Support completions for Idris 1 .lidr files.
