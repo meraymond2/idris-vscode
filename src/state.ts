@@ -4,7 +4,7 @@ import * as vscode from "vscode"
 import { ExtLanguage } from "./languages"
 import { handleWarning } from "./providers/diagnostics"
 import { VirtualDocInfo } from "./providers/virtual-docs"
-import { loadIpkgFile, extractPkgs } from "./ipkg"
+import { extractPkgs } from "./ipkg"
 
 // I’m not using the Memento API because I don’t want persistence across sessions, and I do want type-safety.
 
