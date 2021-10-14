@@ -68,9 +68,9 @@ export const initialiseState = async () => {
     const ipkgUries = await vscode.workspace.findFiles("*.ipkg")
 
     if (ipkgUries.length > 0) {
-      const ipkgFile = await loadIpkgFile(ipkgUries[0])
+      const ipkgFile = await readFile(ipkgUries[0])
       const pkgs = extractPkgs(ipkgFile)
-      pkgs.forEach(pkg => procArgs.push("-p", pkg))
+      pkgs.forEach((pkg) => procArgs.push("-p", pkg))
     }
   }
 
@@ -100,3 +100,9 @@ export const initialiseState = async () => {
 
 export const supportedLanguages = (state: State): ExtLanguage[] =>
   state.idris2Mode ? ["idris", "lidr", "markdown"] : ["idris", "lidr"]
+
+const readFile = async (uri: vscode.Uri): Promise<string> => {
+  const readData = await vscode.workspace.fs.readFile(uri)
+  const data = Buffer.from(readData).toString("utf8")
+  return data
+}
