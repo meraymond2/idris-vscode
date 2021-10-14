@@ -70,7 +70,7 @@ export const initialiseState = async () => {
     if (ipkgUries.length > 0) {
       const ipkgFile = await loadIpkgFile(ipkgUries[0])
       const pkgs = extractPkgs(ipkgFile)
-      pkgs.forEach(pkg => procArgs.push("-p", pkg))
+      pkgs.forEach((pkg) => procArgs.push("-p", pkg))
     }
   }
 
