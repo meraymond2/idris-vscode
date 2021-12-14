@@ -20,6 +20,7 @@ export interface State {
   idrisProc: ChildProcess | null
   idrisProcDir: string | null
   idris2Mode: boolean
+  outputChannel: vscode.OutputChannel
   statusMessage: vscode.Disposable | null
   virtualDocState: Record<string, VirtualDocInfo>
 }
@@ -33,6 +34,7 @@ export const state: State = {
   idrisProc: null,
   idrisProcDir: null,
   idris2Mode: false,
+  outputChannel: vscode.window.createOutputChannel("Idris"),
   statusMessage: null,
   virtualDocState: {},
 }

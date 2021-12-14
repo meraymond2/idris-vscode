@@ -1,5 +1,6 @@
 ## Unreleased
 ### Added
+- Add separate commands for :type-of and :type-at. 
 ### Changed
 ### Fixed
 

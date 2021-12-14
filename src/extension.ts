@@ -19,6 +19,8 @@ import {
   printDefinition,
   printDefinitionSelection,
   proofSearch,
+  typeAt,
+  typeOf,
   version,
 } from "./commands"
 import * as completions from "./providers/completions"
@@ -141,6 +143,10 @@ export const activate = async (context: vscode.ExtensionContext) => {
   context.subscriptions.push(vscode.commands.registerCommand("idris.makeWith", makeWith(client)))
 
   context.subscriptions.push(vscode.commands.registerCommand("idris.proofSearch", proofSearch(client)))
+
+  context.subscriptions.push(vscode.commands.registerCommand("idris.typeAt", typeAt(client)))
+
+  context.subscriptions.push(vscode.commands.registerCommand("idris.typeOf", typeOf(client)))
 
   context.subscriptions.push(vscode.commands.registerCommand("idris.version", version(client)))
 }

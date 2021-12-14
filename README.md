@@ -161,6 +161,11 @@ The extension doesn’t set any key-bindings out of the box, but here are some s
     "key": "ctrl+alt+p",
     "command": "idris.proofSearch",
     "when": "editorLangId == idris && editorTextFocus"
+  },
+  {
+    "key": "ctrl+alt+t",
+    "command": "idris.typeAt",
+    "when": "editorLangId == idris && editorTextFocus"
   }
 ]
 ```
