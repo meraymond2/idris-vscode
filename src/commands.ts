@@ -390,6 +390,8 @@ export const proofSearch = (client: IdrisClient) => async () => {
 }
 
 export const typeAt = (client: IdrisClient) => async () => {
+  if (!state.idris2Mode) return v2Only("Type At")
+
   const selection = currentWord()
   if (selection) {
     const { name, line, range } = selection
@@ -399,7 +401,7 @@ export const typeAt = (client: IdrisClient) => async () => {
     if (reply.ok) {
       state.outputChannel.clear()
       state.outputChannel.append(reply.typeAt)
-      state.outputChannel.show(Boolean("preserveFocus"))
+      state.outputChannel.show(true)
     }
   }
 }
@@ -414,7 +416,7 @@ export const typeOf = (client: IdrisClient) => async () => {
     if (reply.ok) {
       state.outputChannel.clear()
       state.outputChannel.append(reply.typeOf)
-      state.outputChannel.show(Boolean("preserveFocus"))
+      state.outputChannel.show(true)
     }
   }
 }
