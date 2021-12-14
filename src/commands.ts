@@ -389,6 +389,36 @@ export const proofSearch = (client: IdrisClient) => async () => {
   }
 }
 
+export const typeAt = (client: IdrisClient) => async () => {
+  const selection = currentWord()
+  if (selection) {
+    const { name, line, range } = selection
+    const trimmed = name.startsWith("?") ? name.slice(1, name.length) : name
+    await ensureLoaded(client)
+    const reply = await client.typeAt(trimmed, line + 1, range.start.character)
+    if (reply.ok) {
+      state.outputChannel.clear()
+      state.outputChannel.append(reply.typeAt)
+      state.outputChannel.show(Boolean("preserveFocus"))
+    }
+  }
+}
+
+export const typeOf = (client: IdrisClient) => async () => {
+  const selection = currentWord()
+  if (selection) {
+    const { name } = selection
+    const trimmed = name.startsWith("?") ? name.slice(1, name.length) : name
+    await ensureLoaded(client)
+    const reply = await client.typeOf(trimmed)
+    if (reply.ok) {
+      state.outputChannel.clear()
+      state.outputChannel.append(reply.typeOf)
+      state.outputChannel.show(Boolean("preserveFocus"))
+    }
+  }
+}
+
 export const version = (client: IdrisClient) => async () => {
   const { major, minor, patch, tags } = await client.version()
   const nonEmptyTags = tags.filter(Boolean)

@@ -96,6 +96,14 @@
         "title": "Idris: Proof Search"
       },
       {
+        "command": "idris.typeAt",
+        "title": "Idris: Type At"
+      },
+      {
+        "command": "idris.typeOf",
+        "title": "Idris: Type Of"
+      },
+      {
         "command": "idris.version",
         "title": "Idris: Version"
       }
