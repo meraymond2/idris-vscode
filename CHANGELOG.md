@@ -3,6 +3,7 @@
 - Add separate commands for :type-of and :type-at. 
 ### Changed
 ### Fixed
+- Until multiple workspaces are supported, adds an error message. 
 
 ## 0.0.11
 ### Added

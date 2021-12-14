@@ -58,6 +58,8 @@ export const initialiseState = async () => {
   let idrisProcDir = null
   if (idris2Mode && workspacePaths?.length === 1) {
     idrisProcDir = workspacePaths[0]
+  } else {
+    vscode.window.showErrorMessage("Multiple workspaces are not currently supported, and most features may not work correctly.")
   }
 
   /* Idris2 won’t locate the ipkg file by default if the code is in another
