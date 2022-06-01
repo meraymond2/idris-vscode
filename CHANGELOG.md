@@ -2,6 +2,7 @@
 ### Added
 ### Changed
 ### Fixed
+- Fixed a bug in Idris v1 mode where it would erroneously show the workspace error message.  
 
 ## 0.0.12
 ### Added
