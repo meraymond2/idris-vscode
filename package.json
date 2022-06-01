@@ -144,6 +144,14 @@
           ],
           "default": "Type Of",
           "description": "Configure which command should be called when hovering over a variable."
+        },
+        "idris.processArgs": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "default": [],
+          "description": "Optional additional flags to pass to the Idris IDE process, e.g. `-p contrib`."
         }
       }
     },
