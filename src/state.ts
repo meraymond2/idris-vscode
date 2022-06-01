@@ -56,7 +56,7 @@ export const initialiseState = async () => {
 
   const workspacePaths = vscode.workspace.workspaceFolders?.map((folder) => folder.uri.path)
   let idrisProcDir = null
-  if (idris2Mode && workspacePaths?.length === 1) {
+  if (workspacePaths?.length === 1) {
     idrisProcDir = workspacePaths[0]
   } else {
     vscode.window.showErrorMessage("Multiple workspaces are not currently supported, and most features may not work correctly.")
