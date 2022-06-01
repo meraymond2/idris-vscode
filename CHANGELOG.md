@@ -1,5 +1,6 @@
 ## Unreleased
 ### Added
+- Added the ability to specify additional arguments for the Idris process.
 ### Changed
 ### Fixed
 - Fixed a bug in Idris v1 mode where it would erroneously show the workspace error message.  
