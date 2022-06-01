@@ -62,7 +62,9 @@ export const activate = async (context: vscode.ExtensionContext) => {
       if (hoverAction) state.hoverAction = hoverAction
     }
     const procConfigChanged =
-      changeEvent.affectsConfiguration("idris.idrisPath") || changeEvent.affectsConfiguration("idris.idris2Mode")
+      changeEvent.affectsConfiguration("idris.idrisPath") ||
+      changeEvent.affectsConfiguration("idris.idris2Mode") ||
+      changeEvent.affectsConfiguration("idris.processArgs")
     if (procConfigChanged) {
       promptReload()
     }

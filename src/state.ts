@@ -51,6 +51,7 @@ export const initialiseState = async () => {
   const extensionConfig = vscode.workspace.getConfiguration("idris")
   const idrisPath: string = extensionConfig.get("idrisPath") || ""
   const idris2Mode: boolean = extensionConfig.get("idris2Mode") || false
+  const additionalProcArgs: string[] = extensionConfig.get("processArgs") || []
   const autosave: AutoSaveBehaviour | undefined = extensionConfig.get("autosave")
   const hoverAction: HoverBehaviour | undefined = extensionConfig.get("hoverAction")
 
@@ -59,14 +60,19 @@ export const initialiseState = async () => {
   if (workspacePaths?.length === 1) {
     idrisProcDir = workspacePaths[0]
   } else {
-    vscode.window.showErrorMessage("Multiple workspaces are not currently supported, and most features may not work correctly.")
+    vscode.window.showErrorMessage(
+      "Multiple workspaces are not currently supported, and most features may not work correctly."
+    )
   }
 
   /* Idris2 won’t locate the ipkg file by default if the code is in another
   directory, so it’s necessary to pass the --find-ipkg flag. It looks for the ipkg
   in parent directories of the process, so it’s also necessary to start the Idris
   process in the workspace directory.*/
-  const procArgs = idris2Mode ? ["--ide-mode", "--find-ipkg", "--no-color"] : ["--ide-mode"]
+  const baseProcArgs = idris2Mode ? ["--ide-mode", "--find-ipkg", "--no-color"] : ["--ide-mode"]
+  const procArgs = baseProcArgs.concat(
+    additionalProcArgs.reduce<string[]>((acc, arg) => acc.concat(arg.split(/\s+/)), [])
+  )
 
   if (!idris2Mode) {
     const ipkgUries = await vscode.workspace.findFiles("*.ipkg")
