@@ -1,5 +1,10 @@
 ## Unreleased
 ### Added
+### Changed
+### Fixed
+
+## 0.0.13
+### Added
 - Added the ability to specify additional arguments for the Idris process.
 ### Changed
 ### Fixed
