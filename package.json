@@ -232,10 +232,12 @@
     "test": "NODE_ENV=test npx mocha --recursive --require ts-node/register --extensions ts 'test/**/*.ts'"
   },
   "dependencies": {
+    "cross-spawn": "^7.0.3",
     "idris-ide-client": "^0.1.5"
   },
   "devDependencies": {
     "@types/chai": "4.2.21",
+    "@types/cross-spawn": "^6.0.2",
     "@types/mocha": "8.2.3",
     "@types/node": "14.17.2",
     "@types/vscode": "^1.44.0",
