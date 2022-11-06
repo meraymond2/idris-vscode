@@ -111,7 +111,7 @@ const displayApropos = async (client: IdrisClient, input: string): Promise<void>
   if (reply.ok) {
     state.virtualDocState[reply.id] = {
       text: reply.docs,
-      metadata: reply.metadata,
+      metadata: reply.metadata || [],
     }
     const uri = vscode.Uri.parse("idris:" + reply.id)
     const doc = await vscode.workspace.openTextDocument(uri)
@@ -260,7 +260,7 @@ const displayPrintDefinition = async (client: IdrisClient, input: string) => {
   if (reply.ok) {
     state.virtualDocState[reply.id] = {
       text: reply.definition,
-      metadata: reply.metadata,
+      metadata: reply.metadata || [],
     }
     const uri = vscode.Uri.parse("idris:" + reply.id)
     const doc = await vscode.workspace.openTextDocument(uri)
