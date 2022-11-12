@@ -1,11 +1,10 @@
-import { ChildProcess } from "child_process"
+import { ChildProcess, spawn } from "child_process"
 import { IdrisClient, Reply } from "idris-ide-client"
 import * as vscode from "vscode"
 import { ExtLanguage } from "./languages"
 import { handleWarning } from "./providers/diagnostics"
 import { VirtualDocInfo } from "./providers/virtual-docs"
 import { extractPkgs } from "./ipkg"
-import { spawn } from "cross-spawn"
 
 // I’m not using the Memento API because I don’t want persistence across sessions, and I do want type-safety.
 
@@ -85,7 +84,7 @@ export const initialiseState = async () => {
     }
   }
 
-  const procOpts = idrisProcDir ? { cwd: idrisProcDir } : {}
+  const procOpts = idrisProcDir ? { cwd: idrisProcDir, shell: true } : { shell: true }
   const idrisProc = spawn(idrisPath, procArgs, procOpts)
 
   idrisProc.on("error", (_) => {

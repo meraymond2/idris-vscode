@@ -1,7 +1,9 @@
 ## Unreleased
 ### Added
 ### Changed
+- Bumped the back-end to 0.1.6, to handle Idris2 0.6.0. 
 ### Fixed
+- Fixed a bug on Windows where it would fail to start the process.
 
 ## 0.0.13
 ### Added
