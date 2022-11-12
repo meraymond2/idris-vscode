@@ -1,9 +1,15 @@
 ## Unreleased
 ### Added
 ### Changed
+### Fixed
+
+## 0.0.14
+### Added
+### Changed
 - Bumped the back-end to 0.1.6, to handle Idris2 0.6.0. 
 ### Fixed
 - Fixed a bug on Windows where it would fail to start the process.
+- Fixed error msgs being displayed incorrectly due to a change in how they're reported in Idris2 0.6.0.
 
 ## 0.0.13
 ### Added
