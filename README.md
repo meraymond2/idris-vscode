@@ -1,5 +1,15 @@
 # idris-vscode
 
+## Which Extension Should I Use?
+
+This extension wraps the [Idris IDE Protocol](https://idris2.readthedocs.io/en/latest/implementation/ide-protocol.html), which is built in to the Idris compiler. There is also [https://github.com/bamboo/idris2-lsp-vscode](https://github.com/bamboo/idris2-lsp-vscode), which uses the Idris [language server](https://github.com/idris-community/idris2-lsp). 
+
+Use this extension if you are using Idris 1, as the language server only supports Idris 2, or if the language server doesn’t fit your use case for some other reason. 
+
+For Idris 2, the language-server based extension provides additional features, such as semantic highlighting. If you are using the latest version of Idris 2, it may provide a better experience. 
+
+## Installation
+
 Support for [Idris](https://www.idris-lang.org/), the dependently-typed, functional language.
 
 - [Installation](#installation)
@@ -30,8 +40,6 @@ Support for [Idris](https://www.idris-lang.org/), the dependently-typed, functio
   - [Proof Search](#proof-search)
   - [Version](#version)
 - [Keybindings](#keybindings)
-- [Semantic Highlighting](#semantic-highlighting)
-- [To Do](#todo)
 - [About](#about)
 - [License](#license)
 
@@ -180,15 +188,7 @@ The apropos, browse namespace, documentation and definition commands use VS’s 
 
 Currently, Idris source files _don’t_ use semantic highlighting. There are a few issues to work out to get it to sync with Idris in a non-terrible way. Also Idris 2 does not yet return the metadata required for semantic highlighting.
 
-## To Do
-- implement Show References
-- there is more information to add to the metavariables command output
-- semantic highlighting for source code
-- more ipkg integration
-
 ## About
-The extension should be mostly stable for Idris 1, though there a few remaining unimplemented actions. Current work is focused on fixing bugs and maintaining support for Idris 2.
-
 If you run into any problems, please raise an issue, or raise a PR if you want to.
 
 There is not, nor will there ever be, telemetry in this extension (though that may not apply to VS itself).
