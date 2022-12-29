@@ -3,7 +3,7 @@
   "publisher": "meraymond",
   "displayName": "Idris Language",
   "description": "Language support for Idris and Idris 2.",
-  "version": "0.0.14",
+  "version": "0.0.15",
   "license": "MIT",
   "repository": {
     "type": "git",

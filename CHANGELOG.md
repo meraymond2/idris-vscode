@@ -3,6 +3,9 @@
 ### Changed
 ### Fixed
 
+## 0.0.15
+Identical to 0.0.14, just incremented the version to work around issue publishing 14 to to OpenVSX.
+
 ## 0.0.14
 ### Added
 ### Changed
