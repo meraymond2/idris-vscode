@@ -16,6 +16,7 @@
     "Programming Languages"
   ],
   "activationEvents": [
+    "onLanguage:idris2",
     "onLanguage:idris",
     "onLanguage:lidr",
     "onCommand:idris.activate"
