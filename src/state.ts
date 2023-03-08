@@ -109,7 +109,7 @@ export const initialiseState = async () => {
 }
 
 export const supportedLanguages = (state: State): ExtLanguage[] =>
-  state.idris2Mode ? ["idris", "lidr", "markdown"] : ["idris", "lidr"]
+  state.idris2Mode ? ["idris2", "idris", "lidr", "markdown"] : ["idris", "lidr"]
 
 const readFile = async (uri: vscode.Uri): Promise<string> => {
   const readData = await vscode.workspace.fs.readFile(uri)

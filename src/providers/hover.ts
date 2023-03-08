@@ -36,6 +36,7 @@ const overCode = (document: vscode.TextDocument, position: vscode.Position): boo
   if (!isExtLanguage(lang)) return false
 
   switch (lang) {
+    case "idris2":
     case "idris": {
       const parser = new DocStateParser(document.getText(), position)
       const docStateAtPos = parser.parseToEndPos()
